@@ -31,7 +31,11 @@ public class Plane implements Geometry{
 	 */
 	public Plane(Point3D p1, Point3D p2, Point3D p3) {
 		this._p = new Point3D(p1);
-		this._normal = null;
+		// Normal calculation:
+		Vector a = new Vector(p1.subtract(p2));
+		Vector b = new Vector(p1.subtract(p3));
+		this._normal = a.crossProduct(b);
+		_normal.normalize();
 	}
 	
 	/**
@@ -59,7 +63,7 @@ public class Plane implements Geometry{
 	/*** Methods: ***/
 	
 	/**
-	 * Calculate the normal vector to 3D point on the plane (for now, the normal will be null value).
+	 * Calculate the normal vector to 3D point on the plane.
 	 * 
 	 * @param p - a 3D point on the plane.
 	 * @return the normal vector to the plane.

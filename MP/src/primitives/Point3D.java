@@ -143,9 +143,9 @@ public class Point3D {
 	 */
 	public Vector subtract(Point3D p2) {
 		Point3D resultHead= new Point3D(p2);
-		resultHead.coordinate_x=new Coordinate((this.getX()-p2.getX()));
-		resultHead.coordinate_y=new Coordinate((this.getY()-p2.getY()));
-		resultHead.coordinate_z=new Coordinate((this.getZ()-p2.getZ()));
+		resultHead.coordinate_x = new Coordinate((this.getX() - p2.getX()));
+		resultHead.coordinate_y = new Coordinate((this.getY() - p2.getY()));
+		resultHead.coordinate_z = new Coordinate((this.getZ() - p2.getZ()));
 		return new Vector(resultHead);
 	}
 

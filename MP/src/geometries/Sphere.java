@@ -45,13 +45,14 @@ public class Sphere extends RadialGeometry{
 	/*** Methods: ***/
 	
 	/**
-	 * Calculate the normal vector to the center point of the sphere (for now, the normal will be null value).
+	 * Calculate the normal vector to the center point of the sphere.
 	 * 
 	 * @param p - the sphere center point.
 	 * @return the normal vector to the center point.
 	 */
 	public Vector getNormal(Point3D p) {
-		return null;
+		Vector n = new Vector((p.subtract(_center)));
+		return n.normalize();
 	}
 		
 	/**

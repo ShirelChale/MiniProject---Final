@@ -6,6 +6,7 @@ import primitives.*;
  * Inherits from <i>Tube</i>.
  * 
  * A 3D geometry which defined by its axis ray, a radius and its height.
+ * It's a finite geometry.
  *
  * @author Shirel Chale.
  * @author Riky Francois.

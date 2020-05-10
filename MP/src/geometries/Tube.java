@@ -6,6 +6,7 @@ import primitives.*;
  * Inherits from <i>RadialGeometry</i>.
  * 
  * A 3D geometry which defined by its axis ray and a radius.
+ * It's a infinite geometry.
  *
  * @author Shirel Chale.
  * @author Riky Francois.
@@ -39,13 +40,35 @@ public class Tube extends RadialGeometry{
 	/*** Methods: ***/
 	
 	/**
-	 * Calculate the normal vector to a point on the tube (for now, the normal will be null value).
+	 * Calculate the normal vector to a point on the tube.
 	 * 
 	 * @param p - a point on the tube.
 	 * @return the normal vector to point on the tube.
 	 */
 	public Vector getNormal(Point3D p) {
-		return null;
+		// To find tube normal, we need first to find its center (The formula is in Moodle):
+		Point3D center;
+		double temp;
+		temp = _axisRay.get_diraction().dotProduct(p.subtract(_axisRay.get_POO()));
+		center = _axisRay.get_POO().add(_axisRay.get_diraction().scale(temp));
+		
+		// Now, we will use the same method we used for finding sphere normal:
+		Vector n = new Vector((p.subtract(center)));
+		//System.out.println(n.normalize());
+		return n.normalize();
+		
+		/*
+		// To find tube normal, we need first to find its center (The formula is in Moodle):
+		Point3D center;
+		double temp;
+		temp = _axisRay.get_diraction().dotProduct(p.subtract(_axisRay.get_POO()));
+		center = _axisRay.get_POO().add(_axisRay.get_diraction().scale(temp));
+		
+		// Now, we will use the same method we used for finding sphere normal:
+		Vector n = new Vector((p.subtract(center)));
+		//System.out.println(n.normalize());
+		return n.normalize();
+		*/
 	}
 		
 	/**
