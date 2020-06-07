@@ -77,16 +77,6 @@ public class Point3D {
 	
 
 	/*** Methods: ***/
-	/*public boolean equals(Object obj) {
-		Point3D other = (Point3D) obj;
-        if (this == obj) return true;
-        if (obj == null) return false;
-		if (this.coordinate_x.equals(other.x))
-			if(this.coordinate_y.equals(other.y))
-				if(this.coordinate_z.equals(other.z))
-					return true;
-		return false;
-	}*/
 	
 	/**
 	 * Checks if the <i>obj</i> object is equal to different possibilities.

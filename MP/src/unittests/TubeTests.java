@@ -3,6 +3,7 @@
  */
 package unittests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -50,9 +51,9 @@ class TubeTests {
 		
 		Vector v = new Vector(-0.5773502691896263,0.5773502691896254,0.5773502691896254);
 		v.normalize();
-		if (!t.getNormal(point).equals(v))
-			fail("ERROR: Wrong normal");
+		 assertEquals("ERROR: Wrong normal", t.getNormal(point), v);
 	}
+
 }
 
 

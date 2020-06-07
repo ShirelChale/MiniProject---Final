@@ -1,5 +1,10 @@
 package geometries;
 
+import java.util.List;
+
+import primitives.Point3D;
+import primitives.Ray;
+
 /**
  * An abstract class for geometries which had radius.
  * Implements <i>Geometry</i>.
@@ -9,7 +14,7 @@ package geometries;
  *
  */
 
-public abstract class RadialGeometry {
+public abstract class RadialGeometry implements Geometry{
 	
 	/*** Attributes: ***/
 	protected double _radius;
@@ -41,4 +46,8 @@ public abstract class RadialGeometry {
 		return _radius;
 	}
 	
+    @Override
+	public List<Point3D> findIntersections(Ray ray){
+		return null;
+	}
 }

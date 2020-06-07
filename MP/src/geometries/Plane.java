@@ -1,4 +1,9 @@
 package geometries;
+import java.util.ArrayList;
+import java.util.List;
+
+import static primitives.Util.*;
+
 import primitives.*;
 
 /**
@@ -81,4 +86,50 @@ public class Plane implements Geometry{
     public String toString() {
 		return "Point on Plane: "+ _p.toString()+" Normal to Plane: "+ _normal.toString();
 	}
+		
+	 /**
+	 * Adds multiple Geometries to the <i>listOfGeometries</i>. 
+	 *
+	 * @param geometries - a list of Geometries for the <i>listOfGeometries</i>.
+	 */
+    @Override
+	public List<Point3D> findIntersections(Ray ray){
+		
+		double t, help, mechane;
+		if(this._p!=ray.get_POO()) {
+			mechane = this._normal.dotProduct(ray.get_diraction());
+			if(isZero(mechane))
+				return null;
+			else
+			{
+				help = this._normal.dotProduct(this._p.subtract(ray.get_POO()))/mechane;
+				t = alignZero(help);
+				if(t>0) {
+					// The 3DPoint list result:
+					List<Point3D> resultList = new ArrayList<Point3D>();
+
+					Point3D p = ray.getPoint(t);
+					resultList.add(p);
+
+					return resultList;
+				} 
+			}
+		}
+		return null;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

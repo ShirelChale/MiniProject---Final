@@ -81,9 +81,27 @@ public class Polygon implements Geometry {
                 throw new IllegalArgumentException("All vertices must be ordered and the polygon must be convex");
         }
     }
+    
+    @Override
+	public List<Point3D> findIntersections(Ray ray){
+		return null;
+	}
+
 
     @Override
     public Vector getNormal(Point3D point) {
         return _plane.getNormal();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -94,6 +94,11 @@ public class Ray {
 	    "direction: "+
 	    this.toString();
     }
+    
+    public Point3D getPoint(double t) 
+    {
+    	return this._POO.add(this._direction.scale(t));
+    }
 }
     
     
