@@ -98,20 +98,25 @@ public class Camera{
 		// View plane's center point:
 		Point3D pC = _p0.add(_vTo.scale(screenDistance));
 		
+		// View plane resolution:
 		double rX = screenWidth / nX;
 		double rY = screenHeight / nY;
 		
+		// Pixel center calculation:
 		double xJ = (j - nX / 2d) * rX + rX / 2d;
 		double yI = (i - nY / 2d) * rY + rY / 2d;
 		
+		// Declaration of where in the pixel the ray will go through:
 		Point3D pIJ = pC;
 		
+		// Finding the center of pIJ.
 		if(!isZero(xJ))
 			pIJ = pIJ.add(_vRight.scale(xJ));
 		
 		if(!isZero(yI))
 			pIJ = pIJ.add(_vUp.scale(-yI));
 		
+		// Ray's direction vector:
 		Vector Vij = pIJ.subtract(_p0);
 		
 		return new Ray(_p0, Vij);
