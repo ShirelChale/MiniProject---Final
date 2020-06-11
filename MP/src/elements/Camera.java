@@ -118,7 +118,8 @@ public class Camera{
 		
 		// Ray's direction vector:
 		Vector Vij = pIJ.subtract(_p0);
-		
+			
+		// Return the result's ray:
 		return new Ray(_p0, Vij);
 	}
 
