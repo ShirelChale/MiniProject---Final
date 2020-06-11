@@ -53,6 +53,8 @@ public class Ray {
 	public Ray(Ray r) {
 		this._POO = r._POO;
 		this._direction = r._direction;
+		this._direction.normalize();
+		
 	}
 	
 	
@@ -88,11 +90,9 @@ public class Ray {
 	 * 
 	 * @return a string of the Ray's starting point and the Ray's direction.
 	 */
+	@Override
     public String toString() {
-    	return "Ray's starting point: "+
-	    this._POO.toString()+
-	    "direction: "+
-	    this.toString();
+    	return "Ray{" + "_POO" + this._POO + "_direction" + this._direction + "}";
     }
     
     public Point3D getPoint(double t) 
@@ -101,25 +101,18 @@ public class Ray {
     }
 }
     
+//Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -0.19245008972987526,Y = -0.19245008972987526,Z = 0.9622504486493763,}}> 
+//Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -0.19245008972987526,Y = -0.19245008972987526,Z = 0.9622504486493763,}}>
     
     
     
+//Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -0.276172385369497,Y = -0.276172385369497,Z = 0.9205746178983234,}}>
+//Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -0.276172385369497,Y = -0.276172385369497,Z = 0.9205746178983234,}}>    
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+//primitives.Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -2.0,Y = -2.0,Z = 10.0,}}>
+//primitives.Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -2.0,Y = -2.0,Z = 10.0,}}>
     
     
     
