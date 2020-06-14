@@ -77,7 +77,7 @@ public class Sphere extends RadialGeometry{
 	 */
 
 	public List<Point3D> findIntersections(Ray ray){
-
+		
 		Vector L;
 
 		if(!_center.equals(ray.get_POO())) 

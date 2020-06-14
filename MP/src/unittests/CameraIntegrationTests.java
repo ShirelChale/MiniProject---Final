@@ -21,9 +21,9 @@ import primitives.*;
  */
 class CameraIntegrationTests {
 
-	Camera camera1 = new Camera(Point3D.zero, new Vector(0,-1,0), new Vector(0,0,1));
-	Camera camera2 = new Camera(new Point3D(0,0,-0.5), new Vector(0,-1,0), new Vector(0,0,1));
-	Camera camera3 = new Camera(new Point3D(0,0,-1), new Vector(0,-1,0), new Vector(0,0,1));
+	Camera camera1 = new Camera(Point3D.zero, new Vector(0,0,1), new Vector(0,-1,0));
+	Camera camera2 = new Camera(new Point3D(0,0,-0.5), new Vector(0,0,1), new Vector(0,-1,0));
+	Camera camera3 = new Camera(new Point3D(0,0,-1), new Vector(0,0,1), new Vector(0,-1,0));
 	
 	/**
 	 * Test method for integration of sphere by 

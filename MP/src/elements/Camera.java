@@ -15,7 +15,6 @@ import primitives.*;
  * @author Riky Francois.
  *
  */
-
 public class Camera{
 
 	/*** Attributes: ***/
@@ -35,7 +34,7 @@ public class Camera{
 	 * @exception IllegalArgumentException("Vectors aren't orthogonal.") - if the cross product of _vUp and _vTo isn't zero,
 	 * that is, they are not orthogonal, throws exception.
 	 */
-	public Camera(Point3D p, Vector up, Vector to){
+	public Camera(Point3D p, Vector to, Vector up){
 		this._p0 = p;
 		double Check = up.dotProduct(to);
 		

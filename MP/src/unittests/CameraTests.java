@@ -28,7 +28,7 @@ class CameraTests {
 	@Test
 	void testConstructRayThroughPixel() {
 
-		Camera camera = new Camera(Point3D.zero, new Vector(0, -1, 0), new Vector(0, 0, 1));
+		Camera camera = new Camera(Point3D.zero, new Vector(0, 0, 1), new Vector(0, -1, 0));
 
 		// ============ Equivalence Partitions Tests ==============
 
