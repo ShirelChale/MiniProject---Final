@@ -76,15 +76,28 @@ public class Ray {
 	 * @param obj is the object which we want to compare.
 	 * @return a boolean answer to the object's equality.
 	 */
+	@Override
 	public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-		if (this._POO.equals(obj))
-				if(this._direction.equals(obj))
-					return true;
-		return false;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Ray other = (Ray) obj;
+		if (_POO == null) {
+			if (other._POO != null)
+				return false;
+		} else if (!_POO.equals(other._POO))
+			return false;
+		if (_direction == null) {
+			if (other._direction != null)
+				return false;
+		} else if (!_direction.equals(other._direction))
+			return false;
+		return true;
 	}
-	
+
 	/**
 	 * Prints the object in a concise and convenient way.
 	 * 
@@ -100,20 +113,6 @@ public class Ray {
     	return this._POO.add(this._direction.scale(t));
     }
 }
-    
-//Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -0.19245008972987526,Y = -0.19245008972987526,Z = 0.9622504486493763,}}> 
-//Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -0.19245008972987526,Y = -0.19245008972987526,Z = 0.9622504486493763,}}>
-    
-    
-    
-//Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -0.276172385369497,Y = -0.276172385369497,Z = 0.9205746178983234,}}>
-//Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -0.276172385369497,Y = -0.276172385369497,Z = 0.9205746178983234,}}>    
-    
-    
-    
-//primitives.Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -2.0,Y = -2.0,Z = 10.0,}}>
-//primitives.Ray<Ray{_POO{X = 0.0,Y = 0.0,Z = 0.0,}_directionHead = {X = -2.0,Y = -2.0,Z = 10.0,}}>
-    
     
     
     
