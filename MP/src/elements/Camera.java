@@ -54,6 +54,7 @@ public class Camera{
 	
 	
 	/*** Getters: ***/
+	
 	public Point3D getPosition() {
 		return _p0;
 	}
@@ -74,7 +75,7 @@ public class Camera{
 	/*** Methods: ***/
 
 	/**
-	 * Calculate a ray for a view plane pixel.
+	 * Function <i>constructRayThroughPixel</i> - Calculate a ray for a view plane pixel.
 	 * 
 	 * @param nX - number of pixels in a view plane's row.
 	 * @param nY - number of pixels in a view plane's column.

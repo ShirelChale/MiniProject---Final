@@ -11,6 +11,9 @@ package primitives;
  * 
  */
 public class Color {
+	
+	/*** Attributes: ***/
+
     /**
      * The internal fields tx`o maintain RGB components as double numbers from 0 to
      * whatever...
@@ -19,6 +22,10 @@ public class Color {
 
     public final static Color BLACK = new Color();
 
+    
+    
+	/*** Constructors: ***/
+    
     /**
      * Default constructor - to generate Black Color (privately)
      */
@@ -40,6 +47,7 @@ public class Color {
         _b = b;
     }
 
+    
     /**
      * Copy constructor for Color
      * 
@@ -51,6 +59,7 @@ public class Color {
         _b = other._b;
     }
 
+    
     /**
      * Constructor on base of java.awt.Color object
      * 
@@ -62,6 +71,10 @@ public class Color {
         _b = other.getBlue();
     }
 
+    
+    
+	/*** Getters & Setters: ***/
+    
     /**
      * Color setter to reset the color to BLACK
      * 
@@ -129,6 +142,10 @@ public class Color {
         return new java.awt.Color(r > 255 ? 255 : r, g > 255 ? 255 : g, b > 255 ? 255 : b);
     }
 
+    
+    
+	/*** Methods: ***/
+    
     /**
      * Operation of adding this and one or more other colors (by component)
      *

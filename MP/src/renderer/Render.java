@@ -20,10 +20,28 @@ public class Render {
 	private Scene _scene;
 	private ImageWriter _imageWriter;
 
+	
+	
+	/*** Constructors: ***/
+
+	/**
+	 * A <i>Render</i> constructor - for an imageWriter and a scene. 
+	 *
+	 * @param image - an image on which we're working on.
+	 * @param s - a scene which we're want to write to an image.
+	 */
+	public Render(ImageWriter image, Scene s)
+	{
+		this._imageWriter = image;
+		this._scene = s;
+	}
+	
+	
+	
 	/*** Methods: ***/
 	
 	/**
-	 * Function renderImage - adds the received geometries to <i>_geometries</i> collection.
+	 * Function renderImage - creates an image of a scene.
 	 */
 	public void renderImage()
 	{
@@ -54,7 +72,12 @@ public class Render {
 			}
 	}
 
-	
+	/**
+	 * Function printGrid - creates a grid over an image in a received color.
+	 * 
+	 * @param interval - number of pixels which help us to select the pixel for the grid color.
+	 * @param color - the color for the grid.
+	 */
 	public void printGrid(int interval, java.awt.Color color)
 	{
 		int Nx = _imageWriter.getNx();
@@ -67,26 +90,30 @@ public class Render {
 			}
 	}
 	
-	
-	public Render(ImageWriter image, Scene s)
-	{
-		this._imageWriter = image;
-		this._scene = s;
-	}
-	
-	
+	/**
+	 * Function writeToImage - write to an image.
+	 */
 	public void writeToImage()
 	{
 		_imageWriter.writeToImage();
 	}
 
 	
+	/**
+	 * Function calcColor - calculate the color to write to a pixel.
+	 * 
+	 * @param p - ?
+	 */
 	private Color calcColor(Point3D p)
 	{
 		return this._scene.get_ambientLight().get_intensity();
 	}
 	
-	
+	/**
+	 * Function getClosestPoint - calculate the closest point for finding the wanted color.
+	 * 
+	 * @param intersectionPointsList - a list of 3D points which among we want to find the closest point.
+	 */
 	private Point3D getClosestPoint(List<Point3D> intersectionPointsList)
 	{
 		Point3D p0 = this._scene.get_camera().getPosition();

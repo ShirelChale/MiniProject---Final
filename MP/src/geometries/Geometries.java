@@ -54,7 +54,6 @@ public class Geometries implements Intersectable{
 		
 		List<Point3D> result = new ArrayList<Point3D>();
 		for(int i =0; i < listOfGeometries.size(); i++) {
-			//List<Point3D> ourPoints = null;
 			List<Point3D> ourPoints = listOfGeometries.get(i).findIntersections(ray);
 			if(ourPoints != null)
 				result.addAll(listOfGeometries.get(i).findIntersections(ray));

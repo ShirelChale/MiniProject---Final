@@ -35,11 +35,6 @@ public class Sphere extends RadialGeometry{
 		this._center=new Point3D(p);
 	}
 
-	/*public Sphere(Sphere s) {
-		super(s._radius);
-		this._center = new Point3D(s._center);
-	}*/
-
 
 	/*** Getters: ***/
 	public Point3D get_center() {
@@ -60,6 +55,7 @@ public class Sphere extends RadialGeometry{
 		return n.normalize();
 	}
 
+	
 	/**
 	 * Prints the object in a concise and convenient way.
 	 * 
@@ -70,12 +66,12 @@ public class Sphere extends RadialGeometry{
 		return "Sphere's radius: " + this._radius + "Sphere's center: " + this._center.toString();
 	}
 
+	
 	/**
 	 * Finds geometries intersection by sending a ray to the geometry. 
 	 *
 	 * @param ray - the ray that been sent to the Geometries.
 	 */
-
 	public List<Point3D> findIntersections(Ray ray){
 		
 		Vector L;

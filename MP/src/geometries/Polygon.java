@@ -13,15 +13,22 @@ import static primitives.Util.*;
  * 
  */
 public class Polygon implements Geometry {
+	
+	/*** Attributes: ***/
+
     /**
      * List of polygon's vertices
      */
     protected List<Point3D> _vertices;
+    
     /**
      * Associated plane in which the polygon lays
      */
     public Plane _plane;
 
+    
+	/*** A constructor: ***/
+    
     /**
      * Polygon constructor based on vertices list. The list must be ordered by edge
      * path. The polygon must be convex.
@@ -82,6 +89,9 @@ public class Polygon implements Geometry {
         }
     }
     
+    
+	/*** Methods: ***/
+
     @Override
 	public List<Point3D> findIntersections(Ray ray){
 		return null;
