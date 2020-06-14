@@ -15,17 +15,6 @@ package primitives;
 public class Ray {
 	
 	/*** Attributes: ***/
-	//private double x;
-	//private double y;
-	//private double z; 
-	
-	//private double x1;
-	//private double y1;
-	//private double z1; 
-	
-	//private Point3D _POO=new Point3D(x, y, z);
-	//private Vector _direction = new Vector(x1, y1, z1);
-	
 	private Point3D _POO;
 	private Vector _direction;
 
