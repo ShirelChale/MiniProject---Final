@@ -5,14 +5,14 @@ import primitives.*;
 import static primitives.Util.*;
 
 /**
- * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
- * system
+ * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate system.
+ * Inherits from <i>Geometry</i>.
  * 
  * @author Shirel Chale.
  * @author Riky Francois.
  * 
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
 	
 	/*** Attributes: ***/
 
@@ -51,6 +51,7 @@ public class Polygon implements Geometry {
      *                                  </ul>
      */
     public Polygon(Point3D... vertices) {
+    	super();
         if (vertices.length < 3)
             throw new IllegalArgumentException("A polygon can't have less than 3 vertices");
         _vertices = List.of(vertices);
@@ -89,15 +90,57 @@ public class Polygon implements Geometry {
         }
     }
     
+    /**
+     * Polygon constructor based on a color and vertices list. The list must be ordered by edge
+     * path.
+     * 
+    */
+    public Polygon(Color emmission, Point3D... vertices) {
+    	this(vertices);
+    	this._emmission = emmission;
+    }
     
+    
+    /**
+     * Polygon constructor based on a color and vertices list. The list must be ordered by edge
+     * path.
+     * 
+    */
+    public Polygon(Material m, Color emmission, Point3D... vertices) {
+    	this(emmission, vertices);
+    	this._material = m;
+    }
+    
+    
+    
+	/*** A getter: ***/
+    
+	public void set_vertices(List<Point3D> _vertices) {
+		this._vertices = _vertices;
+	}
+
+	
+	
 	/*** Methods: ***/
 
+	/**
+	 * Function findIntersections - finds geometries intersection by sending a ray to the geometry. 
+	 *
+	 * @param ray - the ray that been sent to the Geometries.
+	 * @return a list of intersection of <i>GeoPoint</i>.
+	 */
     @Override
-	public List<Point3D> findIntersections(Ray ray){
+	public List<GeoPoint> findIntersections(Ray ray){
 		return null;
 	}
 
-
+    
+	/**
+	 * Calculate the normal vector to the center point of the polygon.
+	 * 
+	 * @param p - a 3D point on the polygon.
+	 * @return the normal vector to the polygon.
+	 */
     @Override
     public Vector getNormal(Point3D point) {
         return _plane.getNormal();

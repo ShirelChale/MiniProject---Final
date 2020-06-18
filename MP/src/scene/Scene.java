@@ -4,18 +4,21 @@ import primitives.*;
 import elements.*;
 import geometries.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * A Scene Object.
  * 
- * A Vector object is a basic object in geometry with size and direction. 
- * It's defined by its end point (its starting point is the origin).
+ * A Scene object the collection of details about a certain scene in the space. A scene made by geometric shapes.
+ * It's defined by its name, a color background, an Ambient Light, geometries, a camera and its distance from the view plane.
  * 
  * @author Shirel Chale.
  * @author Riky Francois.
  *
  */
 public class Scene {
-	
+
 	/*** Attributes: ***/
 	private String _name;
 	private Color _background;
@@ -23,8 +26,8 @@ public class Scene {
 	private Geometries _geometries;
 	private Camera _camera;
 	private double _distance;
-	
-	
+	List<LightSource> _lights = new LinkedList<LightSource>();
+
 	/*** Constructors: ***/
 
 	/**
@@ -86,7 +89,12 @@ public class Scene {
 		this._geometries = _geometries;
 	}
 
-	
+	public List<LightSource> get_Lights() {
+		return _lights;
+	}
+
+
+
 	/*** Methods: ***/
 
 	/**
@@ -98,6 +106,11 @@ public class Scene {
 			_geometries = new Geometries(geometries);
 		else
 			_geometries.add(geometries);
+	}
+
+	public void addLights(LightSource... lights) {
+		for(LightSource l :lights)
+			this._lights.add(l);
 	}
 }
 

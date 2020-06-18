@@ -5,11 +5,22 @@ import primitives.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  A Geometries object. 
+ *  Implements <i>Intersectable</i> class
+ *  
+ *  Defined by an list if geometries.
+ *
+ * @author Shirel Chale.
+ * @author Riky Francois.
+ *
+ */
 public class Geometries implements Intersectable{
 
 	/*** Attributes: ***/
 	private List<Intersectable> listOfGeometries;
 
+	
 	/*** Constructors: ***/
 
 	/**
@@ -31,6 +42,7 @@ public class Geometries implements Intersectable{
 			listOfGeometries.add(geometries[i]);
 	}
 
+	
 
 	/*** Methods: ***/
 
@@ -49,12 +61,13 @@ public class Geometries implements Intersectable{
 	 * Finds geometries intersection by sending a ray to the geometry. 
 	 *
 	 * @param ray - the ray that been sent to the Geometries.
+	 * @return a list of intersection of <i>GeoPoint</i>.
 	 */
-	public List<Point3D> findIntersections(Ray ray){
+	public List<GeoPoint> findIntersections(Ray ray){
 		
-		List<Point3D> result = new ArrayList<Point3D>();
+		List<GeoPoint> result = new ArrayList<GeoPoint>();
 		for(int i =0; i < listOfGeometries.size(); i++) {
-			List<Point3D> ourPoints = listOfGeometries.get(i).findIntersections(ray);
+			List<GeoPoint> ourPoints = listOfGeometries.get(i).findIntersections(ray);
 			if(ourPoints != null)
 				result.addAll(listOfGeometries.get(i).findIntersections(ray));
 		}
@@ -63,6 +76,34 @@ public class Geometries implements Intersectable{
 		else
 			return null;
 	}
+
+	
+	/**
+	 * Checks if the <i>obj</i> object is equal to different possibilities.
+	 * 
+	 * @param obj is the object which we want to compare.
+	 * @return a boolean answer to the object's equality.
+	 */
+	/*
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Geometries other = (Geometries) obj;
+		if (listOfGeometries == null) {
+			if (other.listOfGeometries != null)
+				return false;
+		} else if (!listOfGeometries.equals(other.listOfGeometries))
+			return false;
+		return true;
+	}
+	
+*/	
+	
 }
 
 

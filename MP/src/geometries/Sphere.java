@@ -35,6 +35,30 @@ public class Sphere extends RadialGeometry{
 		this._center=new Point3D(p);
 	}
 
+	/**
+	 * A <i>Sphere</i> constructor - for a double number and a 3D point. 
+	 *
+	 * @param r - the sphere radius.
+	 * @param p - the sphere center point.
+	 */
+	public Sphere(Material m, double r, Point3D p) {
+		this(r,p);
+		this._material = m;
+	}
+
+	
+	/**
+	 * A <i>Sphere</i> constructor - for a double number and a 3D point. 
+	 *
+	 * @param r - the sphere radius.
+	 * @param p - the sphere center point.
+	 */
+	public Sphere(Color color, Material m, double r, Point3D p) {
+		this(m,r,p);
+		this._emmission = color;
+	}
+	
+	
 
 	/*** Getters: ***/
 	public Point3D get_center() {
@@ -55,7 +79,7 @@ public class Sphere extends RadialGeometry{
 		return n.normalize();
 	}
 
-	
+
 	/**
 	 * Prints the object in a concise and convenient way.
 	 * 
@@ -66,14 +90,15 @@ public class Sphere extends RadialGeometry{
 		return "Sphere's radius: " + this._radius + "Sphere's center: " + this._center.toString();
 	}
 
-	
+
 	/**
-	 * Finds geometries intersection by sending a ray to the geometry. 
+	 * Function findIntersections - finds geometries intersection by sending a ray to the geometry. 
 	 *
 	 * @param ray - the ray that been sent to the Geometries.
+	 * @return a list of intersection of <i>GeoPoint</i>.
 	 */
-	public List<Point3D> findIntersections(Ray ray){
-		
+	public List<GeoPoint> findIntersections(Ray ray){
+
 		Vector L;
 
 		if(!_center.equals(ray.get_POO())) 
@@ -95,22 +120,22 @@ public class Sphere extends RadialGeometry{
 		t1 = tm-th;
 		t2 = tm+th;
 
-		Point3D p1,p2;
+		GeoPoint p1,p2;
 
 		t1 = alignZero(t1);
 		t2 = alignZero(t2);
-		
+
 		if(t1 > 0 || t2 > 0) {
 			// The 3DPoint list result:
-			List<Point3D> resultList = new ArrayList<Point3D>();	
-			
+			List<GeoPoint> resultList = new ArrayList<GeoPoint>();	
+
 			if(t1 > 0) {
-				p1 = ray.getPoint(t1);
+				p1 = new GeoPoint(this, ray.getPoint(t1));
 				resultList.add(p1);
 			}
 
 			if(t2 > 0) {
-				p2 = ray.getPoint(t2);
+				p2 = new GeoPoint(this, ray.getPoint(t2));
 				resultList.add(p2);
 			}
 			return resultList;

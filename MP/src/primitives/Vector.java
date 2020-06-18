@@ -3,7 +3,7 @@ package primitives;
 /**
  * A Vector Object.
  * 
- * A vesual . 
+ * A Vector object is a basic object in geometry with size and direction. 
  * It's defined by its end point (its starting point is the origin).
  * 
  * @author Shirel Chale.

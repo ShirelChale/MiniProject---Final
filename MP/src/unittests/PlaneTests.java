@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import geometries.*;
+import geometries.Intersectable.GeoPoint;
 import primitives.*;
 
 /**
@@ -70,13 +71,13 @@ class PlaneTests {
 		// TC01: Ray intersects the plane (1 points)
 		Point3D p1 = new Point3D(1,1,0);
 
-		List<Point3D> resultTC1 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC1 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, 1)));
 
 		assertEquals("Wrong number of points", 1, resultTC1.size());
 		assertEquals("Ray intersects the plane", List.of(p1), resultTC1);
 
 		// TC02: Ray does not intersect the plane (0 points)
-		List<Point3D> resultTC2 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, -1)));
+		List<GeoPoint> resultTC2 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, -1)));
 
 		assertEquals("Wrong number of points", null, resultTC2);
 
@@ -89,13 +90,13 @@ class PlaneTests {
 
 
 		// TC11: Ray included in the plane (0 points)
-		List<Point3D> resultTC11 = plane.findIntersections(new Ray(new Point3D(1, 1, 0), new Vector(1, 0, 0)));
+		List<GeoPoint> resultTC11 = plane.findIntersections(new Ray(new Point3D(1, 1, 0), new Vector(1, 0, 0)));
 
 		assertEquals("Wrong number of points", null, resultTC11);
 
 		
 		// TC12: Ray not included in the plane (0 points)
-		List<Point3D> resultTC12 = plane.findIntersections(new Ray(new Point3D(1, 1, 1), new Vector(1, 0, 0)));
+		List<GeoPoint> resultTC12 = plane.findIntersections(new Ray(new Point3D(1, 1, 1), new Vector(1, 0, 0)));
 
 		assertEquals("Wrong number of points", null, resultTC12);
 
@@ -106,20 +107,20 @@ class PlaneTests {
 
 		// TC13: P0 before the plane (1 points)
 
-		List<Point3D> resultTC13 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC13 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, 1)));
 		
 		assertEquals("Wrong number of points", 1, resultTC13.size());
 		assertEquals("P0 before the plane", List.of(p1), resultTC13);
 		
 
 		// TC14: P0 in the plane (0 points)
-		List<Point3D> resultTC14 = plane.findIntersections(new Ray(new Point3D(1, 1, 0), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC14 = plane.findIntersections(new Ray(new Point3D(1, 1, 0), new Vector(0, 0, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC14);
 
 		
 		// TC15: P0 after the plane (0 points)
-		List<Point3D> resultTC15 = plane.findIntersections(new Ray(new Point3D(1, 1, 1), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC15 = plane.findIntersections(new Ray(new Point3D(1, 1, 1), new Vector(0, 0, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC15);
 
@@ -128,13 +129,13 @@ class PlaneTests {
 		// **** Group: Ray is neither orthogonal nor parallel to the plane
 
 		// TC16: Ray's begins at the plane (0 points)
-		List<Point3D> resultTC16 = plane.findIntersections(new Ray(new Point3D(1, 1, 0), new Vector(2, 5, 1)));
+		List<GeoPoint> resultTC16 = plane.findIntersections(new Ray(new Point3D(1, 1, 0), new Vector(2, 5, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC16);
 		
 
 		// TC17: Ray's begins in the same point which appears as reference point in the plane (0 points)
-		List<Point3D> resultTC17 = plane.findIntersections(new Ray(new Point3D(5, 0, 0), new Vector(2, 5, 1)));
+		List<GeoPoint> resultTC17 = plane.findIntersections(new Ray(new Point3D(5, 0, 0), new Vector(2, 5, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC17);
 	}

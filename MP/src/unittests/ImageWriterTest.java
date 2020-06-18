@@ -1,11 +1,16 @@
 package unittests;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import primitives.*;
 import renderer.*;
 import org.junit.jupiter.api.Test;
 
+/**
+ * 
+ * Unit tests for renderer.ImageWriter class.
+ * 
+ * @author Shirel Chale.
+ * @author Riky Francois.
+ *
+ */
 class ImageWriterTest {
 
 	/**

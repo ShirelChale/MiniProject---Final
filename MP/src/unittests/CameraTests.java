@@ -5,10 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import elements.Camera;
-
 import primitives.*;
-
-import org.junit.jupiter.api.Test;
 
 /**
  * 
@@ -18,7 +15,6 @@ import org.junit.jupiter.api.Test;
  * @author Riky Francois.
  *
  */
-
 class CameraTests {
 
 	/**

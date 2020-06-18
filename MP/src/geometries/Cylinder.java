@@ -32,7 +32,7 @@ public class Cylinder extends Tube{
 		this._height=h;
 	}
 	
-	/*** Getters: ***/
+	/*** A getter: ***/
 	public double get_height() {
 		return _height;
 	}
@@ -41,7 +41,7 @@ public class Cylinder extends Tube{
 	/*** Methods: ***/
 	
 	/**
-	 * Calculate the normal vector to a point on the cylinder (for now, the normal will be null value).
+	 * function <i>getNormal</i> - Calculate the normal vector to a point on the cylinder (for now, the normal will be null value).
 	 * 
 	 * @param p - a point on the cylinder.
 	 * @return the normal vector to point on the cylinder.

@@ -7,7 +7,6 @@ import primitives.*;
 /**
  * A Camera Object.
  * 
- * An optical instrument used to record images.
  * Defined by the camera's view point (its position) and 3 vectors for determining its view plane, 
  * through which rays are sent to create the image.
  *

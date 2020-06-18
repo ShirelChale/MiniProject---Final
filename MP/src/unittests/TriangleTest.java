@@ -7,11 +7,20 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import geometries.Intersectable.GeoPoint;
 import geometries.Triangle;
 import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
 
+/**
+ * 
+ * Unit tests for geometries.Triangle class.
+ * 
+ * @author Shirel Chale.
+ * @author Riky Francois.
+ *
+ */
 class TriangleTest {
 
 	/**
@@ -74,20 +83,20 @@ class TriangleTest {
         // TC01: Point inside the triangle (1 points)
 		Point3D p1 = new Point3D(1,2,0);
 
-		List<Point3D> resultTC01 = triangle.findIntersections(new Ray(new Point3D(1, 2, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC01 = triangle.findIntersections(new Ray(new Point3D(1, 2, -1), new Vector(0, 0, 1)));
         
 		assertEquals("Wrong number of points", 1, resultTC01.size());
 		assertEquals("Point inside the triangle", List.of(p1), resultTC01);
 		
 		
         // TC02: Point outside against edge of the triangle (0 point)
-		List<Point3D> resultTC02 = triangle.findIntersections(new Ray(new Point3D(0.5, 0.5, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC02 = triangle.findIntersections(new Ray(new Point3D(0.5, 0.5, -1), new Vector(0, 0, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC02);
         
         
         // TC03: Point outside against vertex of the triangle (0 points)
-		List<Point3D> resultTC03 = triangle.findIntersections(new Ray(new Point3D(-0.5, 0.5, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC03 = triangle.findIntersections(new Ray(new Point3D(-0.5, 0.5, -1), new Vector(0, 0, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC03);
 
@@ -99,19 +108,19 @@ class TriangleTest {
 		  
 		 
         // TC11: Point on edge (0 points)
-		List<Point3D> resultTC11 = triangle.findIntersections(new Ray(new Point3D(3, 1, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC11 = triangle.findIntersections(new Ray(new Point3D(3, 1, -1), new Vector(0, 0, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC11);
          
         
         // TC12: Point in vertex (0 points)
-		List<Point3D> resultTC12 = triangle.findIntersections(new Ray(new Point3D(0, 1, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC12 = triangle.findIntersections(new Ray(new Point3D(0, 1, -1), new Vector(0, 0, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC12);
         
         
         // TC13: Point on edge's continuation (0 points)
-		List<Point3D> resultTC13 = triangle.findIntersections(new Ray(new Point3D(0, 7, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> resultTC13 = triangle.findIntersections(new Ray(new Point3D(0, 7, -1), new Vector(0, 0, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC13);
 

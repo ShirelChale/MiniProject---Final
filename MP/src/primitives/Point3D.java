@@ -162,6 +162,8 @@ public class Point3D {
 		double distanceSquared = (this.getX()-p.getX())*(this.getX()-p.getX()) + 
 				(this.getY()-p.getY())*(this.getY()-p.getY()) +
 				(this.getZ()-p.getZ())*(this.getZ()-p.getZ());
+				if (distanceSquared<0)
+					distanceSquared=-distanceSquared;
 		return distanceSquared;
 	}
 	

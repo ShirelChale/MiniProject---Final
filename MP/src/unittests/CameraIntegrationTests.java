@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import elements.Camera;
 import geometries.*;
+import geometries.Intersectable.GeoPoint;
 import primitives.*;
 
 /**
@@ -35,7 +36,7 @@ class CameraIntegrationTests {
 		// TC1: Camera and view plane are outside sphere. Radius = 1 (2 points).
 		Sphere sphere1 = new Sphere(1d, new Point3D(0, 0, 3));
 		
-		List<Point3D> resultTC1 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC1 = new ArrayList<GeoPoint>();
 
 		int count1 = 0;
 		int Nx = 3;
@@ -56,7 +57,7 @@ class CameraIntegrationTests {
 		// TC2: Camera is outside sphere but sphere contains the view plane. Radius = 2.5 (18 points).
 		Sphere sphere2 = new Sphere(2.5d, new Point3D(0, 0, 2.5));
 		
-		List<Point3D> resultTC2 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC2 = new ArrayList<GeoPoint>();
 
 		int count2 = 0;
 		
@@ -75,7 +76,7 @@ class CameraIntegrationTests {
 		// TC3: Camera is outside sphere, but 5/9 of view plane's pixels are inside sphere. Radius = 2 (10 points).
 		Sphere sphere3 = new Sphere(2d, new Point3D(0, 0, 2));
 		
-		List<Point3D> resultTC3 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC3 = new ArrayList<GeoPoint>();
 
 		int count3 = 0;
 		
@@ -94,7 +95,7 @@ class CameraIntegrationTests {
 		// TC4: Sphere contains the view plane and the camera. Radius = 4 (9 points).
 		Sphere sphere4 = new Sphere(4d, new Point3D(0, 0, 0));
 		
-		List<Point3D> resultTC4 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC4 = new ArrayList<GeoPoint>();
 
 		int count4 = 0;
 		
@@ -113,7 +114,7 @@ class CameraIntegrationTests {
 		// TC5: Sphere is behind view plane. Radius = 0.5 (0 points).
 		Sphere sphere5 = new Sphere(0.5d, new Point3D(0, 0, -3));
 		
-		List<Point3D> resultTC5 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC5 = new ArrayList<GeoPoint>();
 
 		int count5 = 0;
 		
@@ -141,7 +142,7 @@ class CameraIntegrationTests {
 		// TC1: Plane is in front view plane and its z value is 0 (9 points).
 		Plane plane1 = new Plane(new Point3D(0,0,5), new Vector(0,0,1));
 		
-		List<Point3D> resultTC1 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC1 = new ArrayList<GeoPoint>();
 
 		int count1 = 0;
 		int Nx = 3;
@@ -162,7 +163,7 @@ class CameraIntegrationTests {
 		// TC2: Plane is diagonal to view plane (9 points).
 		Plane plane2 = new Plane(new Point3D(0,0,5), new Vector(0,-1,2));
 
-		List<Point3D> resultTC2 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC2 = new ArrayList<GeoPoint>();
 
 		int count2 = 0;
 
@@ -181,7 +182,7 @@ class CameraIntegrationTests {
 		// TC3: Plane is parallel to only 6 lower pixels of the view plane (6 points).
 		Plane plane3 = new Plane(new Point3D(0,0,5), new Vector(0,-1,1));
 		
-		List<Point3D> resultTC3 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC3 = new ArrayList<GeoPoint>();
 
 		int count3 = 0;
 
@@ -200,7 +201,7 @@ class CameraIntegrationTests {
 		//TC4: Beyond plane (0 points).
 		Plane plane4 = new Plane(new Point3D(0, 0, -5), new Vector(0, 0, 1));
 		
-		List<Point3D> resultTC4 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC4 = new ArrayList<GeoPoint>();
 
 		int count4 = 0;
 
@@ -228,7 +229,7 @@ class CameraIntegrationTests {
 		// TC1: Only middle pixel's ray of view plane intersects the triangle (1 point).
 		Triangle triangle1 = new Triangle(new Point3D(0, -0.5, 1), new Point3D(-0.5, 0.5, 1), new Point3D(0.5, 0.5, 1));
 		
-		List<Point3D> resultTC1 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC1 = new ArrayList<GeoPoint>();
 
 		int count1 = 0;
 		int Nx = 3;
@@ -249,7 +250,7 @@ class CameraIntegrationTests {
 		// TC2: Only middle-upper and center pixels intersects the triangle (2 points).
 		Triangle triangle2 = new Triangle(new Point3D(1, 1, 2), new Point3D(-1, 1, 2), new Point3D(0, -20, 2));
 
-		List<Point3D> resultTC2 = new ArrayList<Point3D>();
+		List<GeoPoint> resultTC2 = new ArrayList<GeoPoint>();
 
 		int count2 = 0;
 
