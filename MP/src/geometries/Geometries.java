@@ -47,7 +47,7 @@ public class Geometries implements Intersectable{
 	/*** Methods: ***/
 
 	/**
-	 * Adds multiple Geometries to the <i>listOfGeometries</i>. 
+	 * function <i>add</i> - Adds multiple Geometries to the <i>listOfGeometries</i>. 
 	 *
 	 * @param geometries - a list of Geometries for the <i>listOfGeometries</i>.
 	 */
@@ -58,7 +58,7 @@ public class Geometries implements Intersectable{
 	}
 
 	/**
-	 * Finds geometries intersection by sending a ray to the geometry. 
+	 * function <i>findIntersections</i> - Finds geometries intersection by sending a ray to the geometry. 
 	 *
 	 * @param ray - the ray that been sent to the Geometries.
 	 * @return a list of intersection of <i>GeoPoint</i>.

@@ -114,7 +114,7 @@ public class Plane extends Geometry{
 	}
 
 	/**
-	 * Prints the object in a concise and convenient way.
+	 * Function <i>toString</i> - Prints the object in a concise and convenient way.
 	 * 
 	 * @return a string of the Point on the plane and the normal to plane.
 	 */
@@ -124,9 +124,10 @@ public class Plane extends Geometry{
 	}
 
 	/**
-	 * Adds multiple Geometries to the <i>listOfGeometries</i>. 
+	 * Function <i>findIntersections</i> - finds geometries intersection by sending a ray to the sphere. 
 	 *
-	 * @param geometries - a list of Geometries for the <i>listOfGeometries</i>.
+	 * @param ray - the ray that been sent to the plane.
+	 * @return a list of intersection of <i>GeoPoint</i>.
 	 */
 	@Override
 	public List<GeoPoint> findIntersections(Ray ray){

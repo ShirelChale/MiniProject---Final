@@ -40,7 +40,7 @@ public class Tube extends RadialGeometry{
 	/*** Methods: ***/
 	
 	/**
-	 * Calculate the normal vector to a point on the tube.
+	 * function <i>getNormal</i> - Calculate the normal vector to a point on the tube.
 	 * 
 	 * @param p - a point on the tube.
 	 * @return the normal vector to point on the tube.
@@ -72,7 +72,7 @@ public class Tube extends RadialGeometry{
 	}
 		
 	/**
-	 * Prints the object in a concise and convenient way.
+	 * function <i>toString</i> - Prints the object in a concise and convenient way.
 	 * 
 	 * @return a string of the tube's radius and the tube's axis ray.
 	 */

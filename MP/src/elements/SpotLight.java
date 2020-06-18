@@ -2,6 +2,16 @@ package elements;
 
 import primitives.*;
 
+/**
+ *  An Spot Light object.
+ *  Defined by its position, its attenuation speed and 3 attenuation factors.
+ *  
+ *  Inherits from <i>PointLight</i>.
+ *
+ * @author Shirel Chale.
+ * @author Riky Francois.
+ *
+ */
 public class SpotLight extends PointLight{
 	
 	/*** Attributes: ***/
@@ -13,12 +23,15 @@ public class SpotLight extends PointLight{
 	/*** A constructor: ***/
 
 	/**
-	 * A <i>SpotLight</i> constructor - for a color, a direction vector and 3 doubles. 
+	 * A <i>SpotLight</i> constructor - for a color, a 3D point, a vector, a double and 3 doubles. 
 	 * 
-	 * @param
-	 * @param c - the 1st 3D point on the triangle.
-	 * @param l - the 2nd 3D point on the triangle.
-	 * @param q - the 3rd 3D point on the triangle.
+	 * @param color - light's color.
+	 * @param p - light's position.
+	 * @param v - light's directional vector.
+	 * @param c - the 1st attenuation factor.
+	 * @param l - the 2nd attenuation factor.
+	 * @param q - the 3rd attenuation factor.
+	 * @param concenteration - the attenuation speed of the light.
 	 */
 	public SpotLight(Color color, Point3D p, Vector v, double c, double l, double q, double concenteration){
 		super(color, p, c, l, q);
@@ -28,22 +41,29 @@ public class SpotLight extends PointLight{
 	
 	
 	/**
-	 * A <i>SpotLight</i> constructor - for a color, a direction vector and 3 doubles. 
+	 * A <i>SpotLight</i> constructor - for a color, a 3D point, a vector and 3 doubles. 
 	 * 
-	 * @param
-	 * @param c - the 1st 3D point on the triangle.
-	 * @param l - the 2nd 3D point on the triangle.
-	 * @param q - the 3rd 3D point on the triangle.
+	 * @param color - light's color.
+	 * @param p - light's position.
+	 * @param v - light's directional vector.
+	 * @param c - the 1st attenuation factor.
+	 * @param l - the 2nd attenuation factor.
+	 * @param q - the 3rd attenuation factor.
 	 */
 	public SpotLight(Color color, Point3D p, Vector v, double c, double l, double q){
 		this(color, p, v, c, l, q, 1);
 	}
 	
 
+	/*** Methods: ***/
 	
+	/**
+	 * Function <i>getIntensity</i> - Calculate the intensity of a point on a geometry.
+	 * 
+	 * @param p - a point on a geometry.
+	 * @return the intensity color at p.
+	 */
 	public Color getIntensity(Point3D p) {
-		//double denominator = this._kC + this._kL * this.getL(p).length() + this._kQ * (this.getL(p).lengthSquared());
-		//return this._intensity.scale(this._diraction.normalize().dotProduct(this.getL(p))).reduce(denominator);
 
 		double projection = this._direction.dotProduct(this.getL(p).normalize());
 		

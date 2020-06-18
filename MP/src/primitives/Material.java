@@ -18,11 +18,20 @@ public class Material {
 	private int _nShininess;
 
 
-	public Material(double _KD, double _KS, int _nShininess) {
+	/*** A constructor: ***/
+	
+	/**
+	 * A <i>Material</i> constructor - 2 doubles and an integer.
+	 * 
+	 * @param KD - the 1st attenuation factor.
+	 * @param KS - the 2nd attenuation factor.
+	 * @param nShininess - a number that represents the material's Shininess.
+	 */
+	public Material(double KD, double KS, int nShininess) {
 		//super();
-		this._KD = _KD;
-		this._KS = _KS;
-		this._nShininess = _nShininess;
+		this._KD = KD;
+		this._KS = KS;
+		this._nShininess = nShininess;
 	}
 
 

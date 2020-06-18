@@ -98,7 +98,8 @@ public class Scene {
 	/*** Methods: ***/
 
 	/**
-	 * Function addGeometries - adds the received geometries to <i>_geometries</i> collection.
+	 * Function <i>addGeometries</i> - adds the received geometries to <i>_geometries</i> collection.
+	 * @param lights - a list of intersectable geometries.
 	 */
 	public void addGeometries(Intersectable... geometries)
 	{
@@ -108,6 +109,11 @@ public class Scene {
 			_geometries.add(geometries);
 	}
 
+	/**
+	 * Function <i>addLights</i> - adds lights to the <i>_geometries</i> collection.
+	 * 
+	 * @param lights - a list of source lights.
+	 */
 	public void addLights(LightSource... lights) {
 		for(LightSource l :lights)
 			this._lights.add(l);

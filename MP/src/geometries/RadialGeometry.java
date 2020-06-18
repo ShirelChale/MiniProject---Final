@@ -9,6 +9,8 @@ import static primitives.Util.*;
 
 /**
  * An abstract class for geometries which had radius.
+ * Defined by its radius.
+ * 
  * Inherits from <i>Geometry</i>.
  *
  * @author Shirel Chale.
@@ -84,7 +86,7 @@ public abstract class RadialGeometry extends Geometry{
 	}
 
 	/**
-	 * Calculate the normal vector to the center point of the polygon.
+	 * Function <i>findIntersections</i> - finds geometries intersection by sending a ray to the geometry. 
 	 * 
 	 * @param ray - ray which sent to the radial geometry.
 	 * @return null value.

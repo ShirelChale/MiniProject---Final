@@ -3,6 +3,8 @@ import primitives.*;
 
 /**
  * An abstract class for kinds of geometries. 
+ * Defined by its color and its material.
+ * 
  * Implements <i>Intersectable</i> class
  * 
  * @author Shirel Chale.

@@ -60,16 +60,17 @@ public class Sphere extends RadialGeometry{
 	
 	
 
-	/*** Getters: ***/
+	/*** A getter: ***/
 	public Point3D get_center() {
 		return _center;
 	}
 
 
+	
 	/*** Methods: ***/
 
 	/**
-	 * Calculate the normal vector to the center point of the sphere.
+	 * Function <i>getNormal</i> - Calculate the normal vector to the center point of the sphere.
 	 * 
 	 * @param p - the sphere center point.
 	 * @return the normal vector to the center point.
@@ -81,7 +82,7 @@ public class Sphere extends RadialGeometry{
 
 
 	/**
-	 * Prints the object in a concise and convenient way.
+	 * Function <i>toString</i> - Prints the object in a concise and convenient way.
 	 * 
 	 * @return a string of the sphere's radius and the sphere's center point.
 	 */
@@ -92,9 +93,9 @@ public class Sphere extends RadialGeometry{
 
 
 	/**
-	 * Function findIntersections - finds geometries intersection by sending a ray to the geometry. 
+	 * Function <i>findIntersections</i> - finds geometries intersection by sending a ray to the sphere. 
 	 *
-	 * @param ray - the ray that been sent to the Geometries.
+	 * @param ray - the ray that been sent to the sphere.
 	 * @return a list of intersection of <i>GeoPoint</i>.
 	 */
 	public List<GeoPoint> findIntersections(Ray ray){

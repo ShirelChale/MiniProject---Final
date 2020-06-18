@@ -4,9 +4,9 @@ import primitives.*;
 import java.util.List;
 
 /**
- *  A Intersectable geometry interface.
+ *  A <i>Intersectable</i> geometry interface.
  *  
- *  Defined by a geometry and a 3D point.
+ *  Contains a <i>GeoPoint</i> class which defined by a geometry and a 3D point.
  *
  * @author Shirel Chale.
  * @author Riky Francois.
@@ -14,14 +14,15 @@ import java.util.List;
  */
 public interface Intersectable {
 
+	
 	public static class GeoPoint {
-		
+
 		/*** Attributes: ***/
-	    public Geometry geometry;
-	    public Point3D point;
-	    
-	    
-	    
+		public Geometry geometry;
+		public Point3D point;
+
+
+
 		/*** Constructors: ***/
 
 		/**
@@ -35,13 +36,13 @@ public interface Intersectable {
 			this.geometry = geo;
 			this.point = p;
 		}
-		
-		
-		
+
+
+
 		/*** Methods: ***/
-		
+
 		/**
-		 * Checks if the <i>obj</i> object is equal to different possibilities.
+		 * Function <i>equals</i> - Checks if the <i>obj</i> object is equal to different possibilities.
 		 * 
 		 * @param obj is the object which we want to compare.
 		 * @return a boolean answer to the object's equality.
@@ -67,17 +68,29 @@ public interface Intersectable {
 				return false;
 			return true;
 		}
-		
-		
+
+
 	}
 
 
-	 /**
-	 * Finds geometries intersection by sending a ray to the geometry. 
+	/*** Methods: ***/
+
+	/**
+	 * *Function for implementation:*
+	 * Function <i>findIntersections</i> - Finds geometries intersection by sending a ray to the geometry. 
 	 *
 	 * @param ray - the ray that been sent to the Geometries.
+	 * @return a list of intersection of <i>GeoPoint</i>.
 	 */
 	public List<GeoPoint> findIntersections(Ray ray);
-	
+
+
+	/**
+	 * *Function for implementation:*
+	 * Checks if the <i>obj</i> object is equal to different possibilities.
+	 * 
+	 * @param obj is the object which we want to compare.
+	 * @return a boolean answer to the object's equality.
+	 */
 	public boolean equals(Object obj);
 }

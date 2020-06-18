@@ -75,7 +75,7 @@ public class Triangle extends Polygon {
 	/*** Methods: ***/
 
 	/**
-	 * Adds multiple Geometries to the <i>listOfGeometries</i>. 
+	 * function <i>findIntersections</i> - Adds multiple Geometries to the <i>listOfGeometries</i>. 
 	 *
 	 * @param geometries - a list of Geometries for the <i>listOfGeometries</i>.
 	 * @return a list of intersection of <i>GeoPoint</i>.

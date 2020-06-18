@@ -28,7 +28,7 @@ public class Render {
 	/*** Constructors: ***/
 
 	/**
-	 * A <i>Render</i> constructor - for an imageWriter and a scene. 
+	 * A <i>ImageWriter</i> constructor - for an imageWriter and a scene. 
 	 *
 	 * @param image - an image on which we're working on.
 	 * @param s - a scene which we're want to write to an image.
@@ -44,7 +44,7 @@ public class Render {
 	/*** Methods: ***/
 
 	/**
-	 * Function renderImage - creates an image of a scene.
+	 * Function <i>renderImage</i> - creates an image of a scene.
 	 */
 	public void renderImage()
 	{
@@ -76,7 +76,7 @@ public class Render {
 	}
 
 	/**
-	 * Function printGrid - creates a grid over an image in a received color.
+	 * Function <i>printGrid</i> - creates a grid over an image in a received color.
 	 * 
 	 * @param interval - number of pixels which help us to select the pixel for the grid color.
 	 * @param color - the color for the grid.
@@ -94,7 +94,7 @@ public class Render {
 	}
 
 	/**
-	 * Function writeToImage - write to an image.
+	 * Function <i>writeToImage</i> - writes to an image.
 	 */
 	public void writeToImage()
 	{
@@ -103,9 +103,10 @@ public class Render {
 
 
 	/**
-	 * Function calcColor - calculate the color to write to a pixel.
+	 * Function <i>calcColor</i> - calculate the color to write to a pixel.
 	 * 
-	 * @param p - ?
+	 * @param p - a <i>GeoPoint</i> object.
+	 * @return a color for the object point's pixel to write.
 	 */
 	private Color calcColor(GeoPoint p)
 	{
@@ -132,19 +133,39 @@ public class Render {
 					Color Ip = lg.getIntensity(p.point);
 					result = result.add(
 							calcDiffusive(kd, Nl, Ip),
-							calcSpecular(ks, l, n, v, Nl, nShininess, Ip));
+							calcSecular(ks, l, n, v, Nl, nShininess, Ip));
 				}
 			}
 
 		return result;
 	}
 	
+	
+	/**
+	 * Function <i>calcColor</i> - Checks if a value is positive.
+	 * 
+	 * @param val - a value.
+	 * @return true if it's positive.
+	 */
 	private boolean sign(double val)
 	{
 		return (val > 0d);
 	}
 
-	private Color calcSpecular(double ks, Vector l, Vector n, Vector v, double nl, int nShininess, Color ip) {
+	
+	/**
+	 * Function <i>calcSpecular</i> - calculate the secular color.
+	 * 
+	 * @param ks - the material's 2nd attenuation factor.
+	 * @param l - light source.
+	 * @param n - the normal vector to the point on the geometry.
+	 * @param v - the vector from the camera's view point to the point on the geometry.
+	 * @param nl - the product value of a light's ray which hit the point on the geometry and the normal vector to that point. 
+	 * @param nShininess - the geometry's material shininess value. 
+	 * @param ip - the intensity color of the point on the geometry.
+	 * @return the secular color.
+	 */
+	private Color calcSecular(double ks, Vector l, Vector n, Vector v, double nl, int nShininess, Color ip) {
 		double p = nShininess;
 		
 		Vector r = l.add(n.scale(-2*nl));
@@ -155,7 +176,14 @@ public class Render {
 	}
 
 
-
+	/**
+	 * Function <i>calcDiffusive</i> - calculate the diffusive color.
+	 * 
+	 * @param ks - the material's 2nd attenuation factor.
+	 * @param nl - the product value of a light's ray which hit the point on the geometry and the normal vector to that point. 
+	 * @param ip - the intensity color of the point on the geometry.
+	 * @return the diffusive color.
+	 */
 	private Color calcDiffusive(double kd, double nl, Color ip) {
 		if (nl < 0)
 			nl = -nl;
@@ -165,9 +193,10 @@ public class Render {
 
 
 	/**
-	 * Function getClosestPoint - calculate the closest point for finding the wanted color.
+	 * Function <i>getClosestPoint</i> - calculate the closest point for finding the wanted color.
 	 * 
 	 * @param intersectionPointsList - a list of 3D points which among we want to find the closest point.
+	 * @return a <i>GeoPoint</i> object of the geometry's closest point to the camera.
 	 */
 	private GeoPoint getClosestPoint(List<GeoPoint> intersectionPointsList)
 	{

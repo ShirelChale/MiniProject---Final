@@ -51,7 +51,7 @@ public class Cylinder extends Tube{
 	}
 		
 	/**
-	 * Prints the object in a concise and convenient way.
+	 * function <i>toString</i> - Prints the object in a concise and convenient way.
 	 * 
 	 * @return a string of the cylinder's radius, the cylinder's axis ray and the cylinder's height.
 	 */

@@ -29,7 +29,6 @@ public abstract class Light {
 	}
 
 	
-	
 	/*** A getter: ***/
 	public Color get_intensity() {
 		return _intensity;
