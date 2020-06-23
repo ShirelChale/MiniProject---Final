@@ -28,7 +28,7 @@ public class Render {
 	private Scene _scene;
 	private ImageWriter _imageWriter;
 
-
+	
 
 	/*** Constructors: ***/
 
