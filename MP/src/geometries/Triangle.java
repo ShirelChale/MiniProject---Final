@@ -1,9 +1,12 @@
 package geometries;
 import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import geometries.Intersectable.GeoPoint;
 import primitives.*;
 
 /**
@@ -25,26 +28,26 @@ public class Triangle extends Polygon {
 	/**
 	 * A <i>Triangle</i> constructor - for 3 3D points. 
 	 * 
+	 * @param color - the triangle's color.
 	 * @param p1 - the 1st 3D point on the triangle.
 	 * @param p2 - the 2nd 3D point on the triangle.
 	 * @param p3 - the 3rd 3D point on the triangle.
 	 */
 	public Triangle(Color color, Point3D p1, Point3D p2, Point3D p3) {
-		this(p1,p2,p3);
-		this._emmission=color;
+		this(color, new Material(0, 0, 0), p1,p2,p3);
 	}
 
 	/**
 	 * A <i>Triangle</i> constructor - for 3 3D points. 
 	 * 
-	 * @param m - the 1st 3D point on the triangle.
+	 * @param color - the triangle's color.
+	 * @param m - the triangle's material.
 	 * @param p1 - the 1st 3D point on the triangle.
 	 * @param p2 - the 2nd 3D point on the triangle.
 	 * @param p3 - the 3rd 3D point on the triangle.
 	 */
 	public Triangle(Color color, Material m, Point3D p1, Point3D p2, Point3D p3) {
-		this(color, p1,p2,p3);
-		this._material = m;
+		super(color, m, p1 ,p2,p3);
 	}
 
 	/**
@@ -55,20 +58,9 @@ public class Triangle extends Polygon {
 	 * @param p3 - the 3rd 3D point on the triangle.
 	 */
 	public Triangle(Point3D p1, Point3D p2, Point3D p3) {
-		super(p1,p2,p3);
+		this(Color.BLACK, new Material(0, 0, 0), p1,p2,p3);
 	}
 	
-	/**
-	 * A <i>Triangle</i> constructor - for 3 3D points. 
-	 * 
-	 * @param p1 - the 1st 3D point on the triangle.
-	 * @param p2 - the 2nd 3D point on the triangle.
-	 * @param p3 - the 3rd 3D point on the triangle.
-	 */
-	public Triangle(Material m, Point3D p1, Point3D p2, Point3D p3) {
-		this(p1,p2,p3);
-		this._material = m;
-		}
 	
 	
 

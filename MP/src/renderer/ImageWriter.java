@@ -113,6 +113,7 @@ public class ImageWriter {
 			e.printStackTrace();
 		}
 	}
+	
 
 	/**
 	 * The function writePixel writes a color of a specific pixel

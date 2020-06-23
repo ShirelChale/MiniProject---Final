@@ -19,8 +19,8 @@ public class Camera{
 	/*** Attributes: ***/
 	private Point3D _p0;
 	private Vector _vUp, _vRight, _vTo;
-	
-	
+
+
 	/*** Constructors: ***/
 
 	/**
@@ -34,26 +34,27 @@ public class Camera{
 	 * that is, they are not orthogonal, throws exception.
 	 */
 	public Camera(Point3D p, Vector to, Vector up){
-		this._p0 = p;
+		if (to.length() == 0 || up.length()==0)
+			throw new IllegalArgumentException("vectors can not be (0,0,0)");
+
 		double Check = up.dotProduct(to);
-		
+
 		if (Check == 0) {
-			this._vUp = up;
-			this._vUp.normalize();
-			this._vTo = to;
-			this._vTo.normalize();
-			
+			this._p0 = new Point3D(p);
+			this._vUp = up.normalize();
+			this._vTo = to.normalize();
+
 			this._vRight = this._vTo.crossProduct(_vUp);
 			this._vRight.normalize();
 		}
-		
+
 		else
 			throw new IllegalArgumentException("Vectors aren't orthogonals.");
 	}
-	
-	
+
+
 	/*** Getters: ***/
-	
+
 	public Point3D getPosition() {
 		return _p0;
 	}
@@ -70,7 +71,7 @@ public class Camera{
 		return _vTo;
 	}
 
-	
+
 	/*** Methods: ***/
 
 	/**
@@ -86,38 +87,37 @@ public class Camera{
 	 * 
 	 * @return the ray for the (j,i) pixel.
 	 */
-	public Ray constructRayThroughPixel (int nX, int nY,
-            int j, int i, double screenDistance,
-            double screenWidth, double screenHeight)
+	public Ray constructRayThroughPixel (int nX, int nY, int j, int i, double screenDistance,
+			double screenWidth, double screenHeight)
 	{
-		
+
 		if(isZero(screenDistance))
 			throw new IllegalArgumentException("Distance can't be 0.");
-		
+
 		// View plane's center point:
 		Point3D pC = _p0.add(_vTo.scale(screenDistance));
-		
+
 		// View plane resolution:
 		double rX = screenWidth / nX;
 		double rY = screenHeight / nY;
-		
+
 		// Pixel center calculation:
 		double xJ = (j - nX / 2d) * rX + rX / 2d;
 		double yI = (i - nY / 2d) * rY + rY / 2d;
-		
+
 		// Declaration of where in the pixel the ray will go through:
 		Point3D pIJ = pC;
-		
-		// Finding the center of pIJ.
+
+		// Finding the center of pIJ:
 		if(!isZero(xJ))
 			pIJ = pIJ.add(_vRight.scale(xJ));
-		
+
 		if(!isZero(yI))
 			pIJ = pIJ.add(_vUp.scale(-yI));
-		
+
 		// Ray's direction vector:
 		Vector Vij = pIJ.subtract(_p0);
-			
+
 		// Return the result's ray:
 		return new Ray(_p0, Vij);
 	}

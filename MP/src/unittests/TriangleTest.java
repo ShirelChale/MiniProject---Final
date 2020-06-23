@@ -3,6 +3,7 @@ package unittests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -45,13 +46,13 @@ class TriangleTest {
 		
 		// First, we will check if point is even on the triangle.
 		// For convenience:
-		double right = (A.getX() - point.getX()) * (B.getY() - point.getY()) * (C.getZ() - point.getZ()) +
-				(B.getX() - point.getX()) * (C.getY() - point.getY()) * (A.getZ() - point.getZ()) +
-				(C.getX() - point.getX()) * (A.getY() - point.getY()) * (B.getZ() - point.getZ());
+		double right = (A.getX().get() - point.getX().get()) * (B.getY().get() - point.getY().get()) * (C.getZ().get() - point.getZ().get()) +
+				(B.getX().get() - point.getX().get()) * (C.getY().get() - point.getY().get()) * (A.getZ().get() - point.getZ().get()) +
+				(C.getX().get() - point.getX().get()) * (A.getY().get() - point.getY().get()) * (B.getZ().get() - point.getZ().get());
 		
-		double left = (A.getX() - point.getX()) * (C.getY() - point.getY()) * (B.getZ() - point.getZ()) +
-				(B.getX() - point.getX()) * (A.getY() - point.getY()) * (C.getZ() - point.getZ()) +
-				(C.getX() - point.getX()) * (B.getY() - point.getY()) * (A.getZ() - point.getZ());
+		double left = (A.getX().get() - point.getX().get()) * (C.getY().get() - point.getY().get()) * (B.getZ().get() - point.getZ().get()) +
+				(B.getX().get() - point.getX().get()) * (A.getY().get() - point.getY().get()) * (C.getZ().get() - point.getZ().get()) +
+				(C.getX().get() - point.getX().get()) * (B.getY().get() - point.getY().get()) * (A.getZ().get() - point.getZ().get());
 		
 		if (right != left)
 			fail("The point isn't on triangle");
@@ -83,8 +84,13 @@ class TriangleTest {
         // TC01: Point inside the triangle (1 points)
 		Point3D p1 = new Point3D(1,2,0);
 
-		List<GeoPoint> resultTC01 = triangle.findIntersections(new Ray(new Point3D(1, 2, -1), new Vector(0, 0, 1)));
-        
+		List<GeoPoint> listTC01 = triangle.findIntersections(new Ray(new Point3D(1, 2, -1), new Vector(0, 0, 1)));
+
+		List<Point3D> resultTC01 = new ArrayList<Point3D>();
+
+		for(GeoPoint p : listTC01)
+			resultTC01.add(p.point);
+		
 		assertEquals("Wrong number of points", 1, resultTC01.size());
 		assertEquals("Point inside the triangle", List.of(p1), resultTC01);
 		

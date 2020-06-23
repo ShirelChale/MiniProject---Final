@@ -221,14 +221,14 @@ public class LightsTests {
         scene.setAmbientLight(new AmbientLight(Color.BLACK, 0));
 
         scene.addGeometries(
-                new Sphere(new Color(java.awt.Color.BLUE), new Material(0.5, 0.5, 100), 50, new Point3D(0, 0, 50)));
+                new Sphere(new Color(java.awt.Color.GREEN), new Material(0.5, 0.5, 100), 50, new Point3D(0, 0, 50)));
 
         scene.addLights(new SpotLight(new Color(500, 300, 0), new Point3D(-55, 52, -49),
                 new Vector(1, -1, 2), 1, 0.00002, 0.000000005));
         
-        scene.addLights(new DirectionalLight(new Color(500, 300, 0), new Vector(1, -1, 1)));        
+        scene.addLights(new DirectionalLight(new Color(java.awt.Color.BLACK), new Vector(1, -1, 1)));        
         
-        scene.addLights(new PointLight(new Color(500, 300, 0), new Point3D(50, -50, -50), 1.2, 0.00003, 0.000002));
+        scene.addLights(new PointLight(new Color(java.awt.Color.BLUE), new Point3D(50, -50, -50), 1.2, 0.00003, 0.000002));
 
 
         ImageWriter imageWriter = new ImageWriter("sphereMultiple", 150, 150, 500, 500);

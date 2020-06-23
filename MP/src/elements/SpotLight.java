@@ -65,7 +65,7 @@ public class SpotLight extends PointLight{
 	 */
 	public Color getIntensity(Point3D p) {
 
-		double projection = this._direction.dotProduct(this.getL(p).normalize());
+		double projection = this._direction.dotProduct(this.getL(p));
 		
 		if(Util.isZero(projection))
 			return Color.BLACK;

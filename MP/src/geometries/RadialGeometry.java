@@ -2,8 +2,6 @@ package geometries;
 
 import java.util.List;
 
-
-import primitives.Color;
 import primitives.*;
 import static primitives.Util.*;
 
@@ -29,24 +27,13 @@ public abstract class RadialGeometry extends Geometry{
 	/**
 	 * A <i>RadialGeometry</i> constructor - for a double number. 
 	 * 
-	 * @param r - the radius of the geometry.
 	 * @param color - the color of the geometry.
 	 * @param m - the material of the geometry.
-	 */
-	public RadialGeometry(double r, Color color, Material m) {
-		super(color, m);
-		setRadius(r);
-	}
-
-	/**
-	 * A <i>RadialGeometry</i> constructor - for a double number and a radial geometry color. 
-	 * 
 	 * @param r - the radius of the geometry.
-	 * @param color - the color of the radial geometry.
 	 */
-	public RadialGeometry(double r, Color color) {
-		super(color);
-		setRadius(r);
+	public RadialGeometry(Color color, Material m, double r) {
+		super(color, m);
+		_radius = r;
 	}
 
 	/**
@@ -55,7 +42,7 @@ public abstract class RadialGeometry extends Geometry{
 	 * @param r - the radius of the geometry.
 	 */
 	public RadialGeometry(double r) {
-		setRadius(r);
+        this(Color.BLACK, new Material(0, 0, 0), r);
 	}
 
 	/**
@@ -67,32 +54,15 @@ public abstract class RadialGeometry extends Geometry{
 		this._radius = g._radius;
 	}
 
-	/**
-	 * A <i>Vector</i> constructor - for 3 coordinates. 
-	 * 
-	 * @param r - a radius.
-	 * @exception IllegalArgumentException("radius "+r+" is not valid") - if r <=0.
-	 */
-	private void setRadius(double r)
-	{
-		if(isZero(r) || r<0.0)
-			throw new IllegalArgumentException("radius "+r+" is not valid");
-		this._radius = r;
-	}
-
 	/*** Getters: ***/
 	public double get_radius() {
 		return _radius;
 	}
-
-	/**
-	 * Function <i>findIntersections</i> - finds geometries intersection by sending a ray to the geometry. 
-	 * 
-	 * @param ray - ray which sent to the radial geometry.
-	 * @return null value.
-	 */
-	@Override
-	public List<GeoPoint> findIntersections(Ray ray){
-		return null;
-	}
+	
+    @Override
+    public String toString() {
+        return "RadialGeometry{" +
+                "radius=" + _radius +
+                '}';
+    }
 }

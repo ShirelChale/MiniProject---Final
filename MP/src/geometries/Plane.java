@@ -28,6 +28,24 @@ public class Plane extends Geometry{
 	/*** Constructors: ***/
 
 	/**
+	 * A <i>Plane</i> constructor - for a color of the plane, its material and 3 3D points. 
+	 * 
+	 * @param color - a plane's color.
+	 * @param m - the plane's material.
+	 * @param p1 - the 1st 3D point on the plane.
+	 * @param p2 - the 2nd 3D point on the plane.
+	 * @param p3 - the 3rd 3D point on the plane.
+	 */
+    public Plane(Color c, Material m, Point3D p1, Point3D p2, Point3D p3) {
+        super(c, m);
+        _p = p1;
+        Vector v1 = new Vector(p1.subtract(p2));
+        Vector v2 = new Vector(p2.subtract(p3));
+        _normal = v1.crossProduct(v2).normalize();
+    }
+	
+	
+	/**
 	 * A <i>Plane</i> constructor - for 3 3D points. 
 	 * 
 	 * @param p1 - the 1st 3D point on the plane.
@@ -35,14 +53,8 @@ public class Plane extends Geometry{
 	 * @param p3 - the 3rd 3D point on the plane.
 	 */
 	public Plane(Point3D p1, Point3D p2, Point3D p3) {
-		this._p = new Point3D(p1);
-		// Normal calculation:
-		Vector a = new Vector(p1.subtract(p2));
-		Vector b = new Vector(p1.subtract(p3));
-		this._normal = a.crossProduct(b);
-		_normal.normalize();
-	}
-	
+		this(Color.BLACK, new Material(0, 0, 0), p1, p2, p3);
+	}	
 
 
 	/**
@@ -54,13 +66,7 @@ public class Plane extends Geometry{
 	 * @param p3 - the 3rd 3D point on the plane.
 	 */
 	public Plane(Color color, Point3D p1, Point3D p2, Point3D p3) {
-		this._p = new Point3D(p1);
-		// Normal calculation:
-		Vector a = new Vector(p1.subtract(p2));
-		Vector b = new Vector(p1.subtract(p3));
-		this._normal = a.crossProduct(b);
-		_normal.normalize();
-		this._emmission = color;
+		this(color, new Material(0, 0, 0), p1, p2, p3);
 	}
 
 
@@ -71,9 +77,22 @@ public class Plane extends Geometry{
 	 * @param d - a normal vector.
 	 */
 	public Plane(Point3D p, Vector normalToPlane) {
-		this._p=new Point3D(p);
-		this._normal= new Vector(normalToPlane);
+		this(Color.BLACK, new Material(0, 0, 0), p, normalToPlane);
 	}
+
+	/**
+	 * A <i>Plane</i> constructor - for a color of the plane, its material, a 3D point and a normal vector. 
+	 * 
+	 * @param color - a plane's color.
+	 * @param m - the plane's material.
+	 * @param p - a 3D point.
+	 * @param d - a normal vector.
+	 */
+    public Plane(Color c, Material m, Point3D a, Vector n) {
+        super(c, m);
+        _p = a;
+        _normal = n.normalized();
+    }
 
 
 	/**
@@ -84,9 +103,7 @@ public class Plane extends Geometry{
 	 * @param d - a normal vector.
 	 */
 	public Plane(Color color, Point3D p, Vector normalToPlane) {
-		this._p=new Point3D(p);
-		this._normal= new Vector(normalToPlane);
-		this._emmission = color;
+		this(color, new Material(0, 0, 0), p, normalToPlane);
 	}
 
 

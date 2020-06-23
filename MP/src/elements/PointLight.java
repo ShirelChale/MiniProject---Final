@@ -1,7 +1,8 @@
 package elements;
 
-import primitives.Color;
 import primitives.*;
+import static primitives.Util.alignZero;
+
 
 /**
  *  An Point Light object.
@@ -41,6 +42,10 @@ public class PointLight extends Light implements LightSource{
 		this._kQ = q;
 	}
 	
+    public PointLight(Color intensity, Point3D position) {
+        this(intensity, position, 1d, 0d, 0d);
+    }
+	
 	
 	
 	/*** Methods: ***/
@@ -52,7 +57,7 @@ public class PointLight extends Light implements LightSource{
 	 * @return the intensity color at p.
 	 */
 	public Color getIntensity(Point3D p) {
-		double denominator = this._kC + this._kL * this.getL(p).length() + this._kQ * (this.getL(p).lengthSquared());
+		double denominator = this._kC + this._kL * p.distance(_position) + this._kQ * (p.distanceSquared(_position));
 		return this._intensity.reduce(denominator);
 	}
 	
@@ -67,5 +72,16 @@ public class PointLight extends Light implements LightSource{
 			return null;
 		return new Vector(p.subtract(this._position)).normalize();
 
+	}
+	
+	/**
+	 * Function <i>getDistance</i> - Calculate the vector from the light source to a point.
+	 * 
+	 * @param point - a point on a geometry.
+	 * @return ditance from the light source to a point.
+	 */
+	public double getDistance(Point3D point)
+	{
+		return alignZero(this._position.distance(point));
 	}
 }

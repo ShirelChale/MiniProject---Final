@@ -5,6 +5,8 @@ package unittests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -42,9 +44,9 @@ class PlaneTests {
 
 		// Now, we will check whether <i>point</i> is on the plane by placing it in the plane equation.
 		// Afterwards, we'll check if the left side equals the right side.
-		double result = n.get_head().getX() * point.getX() + 
-				n.get_head().getY() * point.getY() + 
-				n.get_head().getZ() * point.getZ();
+		double result = n.get_head().getX().get() * point.getX().get() + 
+				n.get_head().getY().get() * point.getY().get() + 
+				n.get_head().getZ().get() * point.getZ().get();
 
 		if(result != 0)
 			fail("ERROR: The point isn't on Plane");
@@ -71,8 +73,13 @@ class PlaneTests {
 		// TC01: Ray intersects the plane (1 points)
 		Point3D p1 = new Point3D(1,1,0);
 
-		List<GeoPoint> resultTC1 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> listTC1 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, 1)));
+		
+		List<Point3D> resultTC1 = new ArrayList<Point3D>();
 
+		for(GeoPoint p : listTC1)
+			resultTC1.add(p.point);
+			
 		assertEquals("Wrong number of points", 1, resultTC1.size());
 		assertEquals("Ray intersects the plane", List.of(p1), resultTC1);
 
@@ -107,8 +114,13 @@ class PlaneTests {
 
 		// TC13: P0 before the plane (1 points)
 
-		List<GeoPoint> resultTC13 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, 1)));
+		List<GeoPoint> listTC13 = plane.findIntersections(new Ray(new Point3D(1, 1, -1), new Vector(0, 0, 1)));
 		
+		List<Point3D> resultTC13 = new ArrayList<Point3D>();
+
+		for(GeoPoint p : listTC13)
+			resultTC13.add(p.point);
+			
 		assertEquals("Wrong number of points", 1, resultTC13.size());
 		assertEquals("P0 before the plane", List.of(p1), resultTC13);
 		
@@ -138,6 +150,7 @@ class PlaneTests {
 		List<GeoPoint> resultTC17 = plane.findIntersections(new Ray(new Point3D(5, 0, 0), new Vector(2, 5, 1)));
 
 		assertEquals("Wrong number of points", null, resultTC17);
+
 	}
 }
 

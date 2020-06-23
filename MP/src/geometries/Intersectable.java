@@ -1,7 +1,11 @@
 package geometries;
 
 import primitives.*;
+
+import java.util.LinkedList;
 import java.util.List;
+
+import geometries.Intersectable.GeoPoint;
 
 /**
  *  A <i>Intersectable</i> geometry interface.
@@ -33,9 +37,25 @@ public interface Intersectable {
 		 */
 		public GeoPoint(Geometry geo, Point3D p)
 		{
-			this.geometry = geo;
-			this.point = p;
+			geometry = geo;
+			point = p;
 		}
+
+		
+		
+		/*** Getters & A Setter: ***/
+        public void setPoint(Point3D point) {
+            this.point = point;
+        }
+
+        public Geometry getGeometry() {
+            return geometry;
+        }
+
+        public Point3D getPoint() {
+            return point;
+        }
+
 
 
 
@@ -47,7 +67,7 @@ public interface Intersectable {
 		 * @param obj is the object which we want to compare.
 		 * @return a boolean answer to the object's equality.
 		 */
-		@Override
+        @Override
 		public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
@@ -69,7 +89,6 @@ public interface Intersectable {
 			return true;
 		}
 
-
 	}
 
 
@@ -82,15 +101,5 @@ public interface Intersectable {
 	 * @param ray - the ray that been sent to the Geometries.
 	 * @return a list of intersection of <i>GeoPoint</i>.
 	 */
-	public List<GeoPoint> findIntersections(Ray ray);
-
-
-	/**
-	 * *Function for implementation:*
-	 * Checks if the <i>obj</i> object is equal to different possibilities.
-	 * 
-	 * @param obj is the object which we want to compare.
-	 * @return a boolean answer to the object's equality.
-	 */
-	public boolean equals(Object obj);
+	List<GeoPoint> findIntersections(Ray ray);
 }

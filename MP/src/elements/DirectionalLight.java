@@ -6,7 +6,7 @@ import primitives.*;
  *  An Directional Light object.
  *  Defined by its direction.
  *  
- *  Implements <i>LightSource</i>.
+ *  Implements <i>LightSource</i>.A
  *
  * @author Shirel Chale.
  * @author Riky Francois.
@@ -54,7 +54,20 @@ public class DirectionalLight extends Light implements LightSource{
 	 * @return the vector from the light source to a point.
 	 */
 	public Vector getL(Point3D p) {
-		return this._diraction.normalize();
+		return this._diraction;
 	}
 
+
+	/**
+	 * 	 * Function <i>getDistance</i> - Calculate the vector from the light source to a point.
+	 * 
+	 * @param point - a point on a geometry.
+	 * @return distance from the light source to a point.
+	 */
+	@Override
+	public double getDistance(Point3D point) {
+		return Double.POSITIVE_INFINITY;
+	}
+
+	
 }

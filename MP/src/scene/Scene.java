@@ -103,10 +103,8 @@ public class Scene {
 	 */
 	public void addGeometries(Intersectable... geometries)
 	{
-		if(_geometries == null)
-			_geometries = new Geometries(geometries);
-		else
-			_geometries.add(geometries);
+		for(Intersectable geometry :geometries)
+			_geometries.add(geometry);
 	}
 
 	/**

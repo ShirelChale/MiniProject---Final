@@ -56,23 +56,23 @@ public class Point3D {
 	 * @param p - a 3D point.
 	 */
 	public Point3D(Point3D p) {
-		this.coordinate_x = p.coordinate_x;
-		this.coordinate_y = p.coordinate_y;
+		this.coordinate_x = p.getX();
+		this.coordinate_y = p.getY();
 		this.coordinate_z = p.coordinate_z;
 	}
 
 	
 	/*** Getters: ***/
-	public double getX() {
-		return coordinate_x.get();
+	public Coordinate getX() {
+		return coordinate_x;
 	}
 
-	public double getY() {
-		return coordinate_y.get();
+	public Coordinate getY() {
+		return coordinate_y;
 	}
 
-	public double getZ() {
-		return coordinate_z.get();
+	public Coordinate getZ() {
+		return coordinate_z;
 	}
 	
 
@@ -118,11 +118,11 @@ public class Point3D {
 	 */
 	@Override
     public String toString() {
+		
     	return "{"+"X = "+
         this.coordinate_x.toString()+","+ "Y = "+
         this.coordinate_y.toString()+","+ "Z = "+
-        this.coordinate_z.toString()+","+ "}";//{X=0,0,0)
-         
+        this.coordinate_z.toString()+","+ "}";
     }
 
 	/**
@@ -132,10 +132,10 @@ public class Point3D {
 	 * @return the new vector created by the subtracted 3D points.
 	 */
 	public Vector subtract(Point3D p2) {
-		Point3D resultHead= new Point3D(p2);
-		resultHead.coordinate_x = new Coordinate((this.getX() - p2.getX()));
-		resultHead.coordinate_y = new Coordinate((this.getY() - p2.getY()));
-		resultHead.coordinate_z = new Coordinate((this.getZ() - p2.getZ()));
+		Coordinate _x = new Coordinate((this.getX().get() - p2.getX().get()));
+		Coordinate _y = new Coordinate((this.getY().get() - p2.getY().get()));
+		Coordinate _z = new Coordinate((this.getZ().get() - p2.getZ().get()));
+		Point3D resultHead = new Point3D(_x, _y, _z);
 		return new Vector(resultHead);
 	}
 
@@ -146,11 +146,11 @@ public class Point3D {
 	 * @return the result 3D point of the added 3D points.
 	 */
 	public Point3D add(Vector v2) {
-		Point3D result= new Point3D(0,0,0);
-		result.coordinate_x=new Coordinate((v2._head.getX()+this.getX()));
-		result.coordinate_y=new Coordinate((v2._head.getY()+this.getY()));
-		result.coordinate_z=new Coordinate((v2._head.getZ()+this.getZ()));
-		return result;
+		Coordinate _x = new Coordinate((v2._head.getX().get() + this.getX().get()));
+		Coordinate _y = new Coordinate((v2._head.getY().get() + this.getY().get()));
+		Coordinate _z = new Coordinate((v2._head.getZ().get() + this.getZ().get()));
+		Point3D resultHead = new Point3D(_x, _y, _z);
+		return resultHead;
 	}
 	
 	/**
@@ -159,12 +159,9 @@ public class Point3D {
 	 * @return the current 3D point's distance squared.
 	 */
 	public double distanceSquared(Point3D p) {
-		double distanceSquared = (this.getX()-p.getX())*(this.getX()-p.getX()) + 
-				(this.getY()-p.getY())*(this.getY()-p.getY()) +
-				(this.getZ()-p.getZ())*(this.getZ()-p.getZ());
-				if (distanceSquared<0)
-					distanceSquared=-distanceSquared;
-		return distanceSquared;
+		return ((this.getX().get() - p.getX().get()) * (this.getX().get() - p.getX().get()) + 
+				(this.getY().get() - p.getY().get()) * (this.getY().get() - p.getY().get()) +
+				(this.getZ().get() - p.getZ().get()) * (this.getZ().get() - p.getZ().get()));
 	}
 	
 	/**
@@ -173,7 +170,6 @@ public class Point3D {
 	 * @return the current 3D point's distance.
 	 */
 	public double distance(Point3D p) {
-		double distance = Math.sqrt(this.distanceSquared(p));
-		return distance;
+		return Math.sqrt(this.distanceSquared(p));
 	}
 }

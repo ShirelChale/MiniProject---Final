@@ -39,8 +39,8 @@ class TubeTests {
 		
 		// Now,we'll place everything in the tube equation.
 		// For convenience:
-		double xPart = (point.getX() - t.get_axisRay().get_POO().getX());
-		double yPart = (point.getY() - t.get_axisRay().get_POO().getY());
+		double xPart = (point.getX().get() - t.get_axisRay().get_POO().getX().get());
+		double yPart = (point.getY().get() - t.get_axisRay().get_POO().getY().get());
 		
 		double result = (xPart * xPart + yPart * yPart);
 		

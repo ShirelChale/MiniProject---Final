@@ -7,6 +7,8 @@ import geometries.Intersectable.GeoPoint;
 import scene.*;
 import static primitives.Util.*;
 
+import static primitives.Util.alignZero;
+
 import java.lang.Math;
 import java.util.List;
 
@@ -20,6 +22,9 @@ import java.util.List;
 public class Render {
 
 	/*** Attributes: ***/
+	private static final int MAX_CALC_COLOR_LEVEL = 10;
+	private static final double MIN_CALC_COLOR_K = 0.001;
+
 	private Scene _scene;
 	private ImageWriter _imageWriter;
 
@@ -51,7 +56,6 @@ public class Render {
 		Camera cam = _scene.get_camera();
 		java.awt.Color Background = _scene.get_background().getColor();
 		Geometries geometries = _scene.get_geometries();
-		//AmbientLight Al = _scene.get_ambientLight();
 		double distance = _scene.get_distance();
 
 		int Ny = _imageWriter.getNy(); // Amount of pixels by Height.
@@ -70,9 +74,10 @@ public class Render {
 				else
 				{
 					GeoPoint closestPoint = getClosestPoint(intersectionPointsList);
-					_imageWriter.writePixel(j, i, calcColor(closestPoint).getColor());
+					_imageWriter.writePixel(j, i, calcColor(closestPoint, r).getColor());
 				}
 			}
+		
 	}
 
 	/**
@@ -101,48 +106,155 @@ public class Render {
 		_imageWriter.writeToImage();
 	}
 
+	
+	/**
+	 * Function <i>getClosestPoint</i> - calculate the closest point for finding the wanted color.
+	 * 
+	 * @param intersectionPointsList - a list of 3D points which among we want to find the closest point.
+	 * @return a <i>GeoPoint</i> object of the geometry's closest point to the camera.
+	 */
+	private GeoPoint getClosestPoint(List<GeoPoint> intersectionPointsList)
+	{
+		Point3D p0 = this._scene.get_camera().getPosition();
+		GeoPoint closestPoint = null;
+
+		double minDistance = Double.MAX_VALUE;
+		double currentDistance = 0;
+
+		for(GeoPoint p :intersectionPointsList)
+		{
+			currentDistance = p0.distance(p.point);
+
+			if(currentDistance < minDistance)
+			{
+				minDistance = currentDistance;
+				closestPoint = p;
+			}
+		}
+
+		return closestPoint;
+	}
+
 
 	/**
-	 * Function <i>calcColor</i> - calculate the color to write to a pixel.
+	 * Function <i>calcColor</i> - calculates the color to write to a pixel.
 	 * 
-	 * @param p - a <i>GeoPoint</i> object.
+	 * @param geoPoint - a <i>GeoPoint</i> object.
+	 * @param inRay - TODO
 	 * @return a color for the object point's pixel to write.
 	 */
-	private Color calcColor(GeoPoint p)
+	private Color calcColor(GeoPoint geopoint, Ray inRay) 
 	{
-		Color result = this._scene.get_ambientLight().get_intensity();
-		result = result.add(p.geometry.get_emmission());
-		List<LightSource> lights = _scene.get_Lights();
+        Color resultColor = calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0);
+        resultColor = resultColor.add(_scene.get_ambientLight().get_intensity());
 
-		Vector v = p.point.subtract(_scene.get_camera().getPosition()).normalize();
-		Vector n = p.geometry.getNormal(p.point);
+		return resultColor;
+	}
 
-		Material m = p.geometry.get_material();
-		int nShininess = m.get_nShininess();
-		double kd = m.get_KD();
-		double ks = m.get_KS();
 
-		if(_scene.get_Lights() != null)
-			for(LightSource lg :lights) {
-				Vector l = lg.getL(p.point).normalize();
+	/**
+	 * Function <i>calcColor</i> - help function for calculating the color to write to a pixel.
+	 * 
+	 * @param geoPoint - a <i>GeoPoint</i> object.
+	 * @param inRay - 
+	 * @param level - recursion level.
+	 * @param k - TODO
+	 * @return a color for the object point's pixel to write.
+	 */
+	private Color calcColor(GeoPoint geoPoint, Ray inRay, int level, double k) 
+	{
+		if(level == 0 || level == 1 || k < MIN_CALC_COLOR_K)
+			return Color.BLACK;
+
+		Color result = geoPoint.geometry.get_emmission();
+		Point3D pointGeo = geoPoint.point;
+
+		Vector v = pointGeo.subtract(this._scene.get_camera().getPosition()).normalize();
+		Vector n = geoPoint.geometry.getNormal(pointGeo);
+
+		Material material = geoPoint.geometry.get_material();
+		double nShininess = material.get_nShininess();
+		double kd = material.get_KD();
+		double ks = material.get_KS();
+		double kr = geoPoint.geometry.get_material().get_KR();
+		double kt = geoPoint.geometry.get_material().get_KT();
+		double kkr = k * kr;
+		double kkt = k * kt;
+		
+		List<LightSource> lightSources = this._scene.get_Lights();
+
+		if(lightSources != null)
+			for(LightSource lightSource :lightSources) {
+				Vector l = lightSource.getL(pointGeo);
 				double Nl = alignZero(n.dotProduct(l));
 				double Nv = alignZero(n.dotProduct(v));
 
-				if(sign(Nl) == sign(Nv))
-				{
-					Color Ip = lg.getIntensity(p.point);
-					result = result.add(
-							calcDiffusive(kd, Nl, Ip),
-							calcSecular(ks, l, n, v, Nl, nShininess, Ip));
+				if(Nl * Nv > 0) {
+					double ktr = transparency(lightSource, l, n, geoPoint);
+					if(ktr * k > MIN_CALC_COLOR_K) {
+						Color Ip = lightSource.getIntensity(pointGeo).scale(ktr);
+						result = result.add(
+								calcDiffusive(kd, Nl, Ip),
+								calcSpecular(ks, l, n, v, Nl, nShininess, Ip));	
+					}
 				}
 			}
+		
+		if(kkr > MIN_CALC_COLOR_K) {
+			Ray reflectedRay = constructReflectedRay(n, pointGeo, inRay);
+			GeoPoint reflectedPoint = this.findCLosestIntersection(reflectedRay);
+
+			if(reflectedPoint != null)
+				result = result.add(this.calcColor(reflectedPoint, reflectedRay, level-1, kkr).scale(kr));
+		}
+
+		if(kkt > MIN_CALC_COLOR_K) {
+			Ray refractedRay = constructRefractedRay(n, pointGeo, inRay);
+			GeoPoint refractedPoint = this.findCLosestIntersection(refractedRay);
+
+			if(refractedPoint != null)
+				result = result.add(this.calcColor(refractedPoint, refractedRay, level-1, kkt).scale(kt));
+		}
 
 		return result;
 	}
-	
-	
+
+
 	/**
-	 * Function <i>calcColor</i> - Checks if a value is positive.
+	 * Function <i>transparency</i> - calculates the transparency number of the color.
+	 * 
+	 * @param lightSource - the light source.
+	 * @param l - 
+	 * @param n - the normal vector to the point on the geometry.
+	 * @param geoPoint - TODO
+	 * @return the transparency number of the color.
+	 */
+	private double transparency(LightSource lightSource, Vector l, Vector n, GeoPoint geoPoint) {
+		Vector lightDirection = l.scale(-1);
+		Ray lightRay = new Ray(geoPoint.point, lightDirection, n);
+
+		List<GeoPoint> intersection = _scene.get_geometries().findIntersections(lightRay);
+
+		if(intersection == null)
+			return 1d;
+
+		double lightDistance = lightSource.getDistance(geoPoint.point);
+		double ktr = 1d;
+
+		for (GeoPoint gp: intersection)
+			if(alignZero(gp.point.distance(geoPoint.point) - lightDistance) <= 0)
+			{
+				ktr *= gp.geometry.get_material().get_KT();
+
+				if(ktr < MIN_CALC_COLOR_K)
+					return 0d;
+			}
+		return ktr;
+	}
+
+
+	/**
+	 * Function <i>sign</i> - Checks if a value is positive.
 	 * 
 	 * @param val - a value.
 	 * @return true if it's positive.
@@ -152,12 +264,12 @@ public class Render {
 		return (val > 0d);
 	}
 
-	
+
 	/**
 	 * Function <i>calcSpecular</i> - calculate the secular color.
 	 * 
 	 * @param ks - the material's 2nd attenuation factor.
-	 * @param l - light source.
+	 * @param l - the vector from the light source to a point.
 	 * @param n - the normal vector to the point on the geometry.
 	 * @param v - the vector from the camera's view point to the point on the geometry.
 	 * @param nl - the product value of a light's ray which hit the point on the geometry and the normal vector to that point. 
@@ -165,14 +277,19 @@ public class Render {
 	 * @param ip - the intensity color of the point on the geometry.
 	 * @return the secular color.
 	 */
-	private Color calcSecular(double ks, Vector l, Vector n, Vector v, double nl, int nShininess, Color ip) {
+	private Color calcSpecular(double ks, Vector l, Vector n, Vector v, double nl, double nShininess, Color ip) {
 		double p = nShininess;
-		
-		Vector r = l.add(n.scale(-2*nl));
-		double minusVR = -alignZero(r.dotProduct(v));
-		if(minusVR <= 0)
+
+		if(isZero(nl))
+			throw new IllegalArgumentException("nl can't be zero for scaling the normal vector.");
+
+		Vector r = l.add(n.scale(-2 * nl)).normalize();
+		double VR = -alignZero(r.dotProduct(v));
+
+		if(VR <= 0)
 			return Color.BLACK;
-		return ip.scale(ks * Math.pow(minusVR, p));
+
+		return ip.scale(ks * Math.pow(VR, p));
 	}
 
 
@@ -191,49 +308,107 @@ public class Render {
 	}
 
 
+	/**
+	 * Function <i>unshaded</i> - Checks if geometry isn't shaded.
+	 * 
+	 * @param l - the vector from the light source to a point.
+	 * @param n - the normal to the geometry.
+	 * @param gp - a geometry.
+	 * @return true if the geometry isn't shaded.
+	 *//*
+	private boolean unshaded(LightSource light, Vector l, Vector n, GeoPoint geopoint) 
+	{
+		Vector lightDirection = l.scale(-1); // from point to light source
+		Point3D pointGeo = geopoint.point;
+
+		Ray lightRay = new Ray(pointGeo, lightDirection, n);
+
+		List<GeoPoint> intersections = _scene.get_geometries().findIntersections(lightRay);
+
+		if (intersections == null) 
+			return true;
+
+		double lightDistance = light.getDistance(pointGeo);
+
+		for (GeoPoint gp : intersections) {
+			double temp = gp.point.distance(pointGeo) - lightDistance;
+			if (alignZero(temp) <= 0 && gp.geometry.get_material().get_KT() == 0)
+				return false;
+		}
+
+		return true;
+	}*/
+
 
 	/**
-	 * Function <i>getClosestPoint</i> - calculate the closest point for finding the wanted color.
+	 * Function <i>constructReflectedRay</i> - Builds a reflection ray.
 	 * 
-	 * @param intersectionPointsList - a list of 3D points which among we want to find the closest point.
+	 * @param n - the normal to the geometry.
+	 * @param point - a point on the geometry.
+	 * @param inRay - a ray to the geometry
+	 * @return a reflection ray.
+	 */
+	private Ray constructReflectedRay(Vector n, Point3D point, Ray inRay)
+	{
+		Vector v = inRay.get_diraction();
+		double vn = v.dotProduct(n);
+
+		if(vn == 0) 
+			return null;
+
+		Vector r = v.subtract(n.scale(2 * vn));
+		return new Ray(point, r, n);
+	}
+
+
+	/**
+	 * Function <i>constructRefractedRay</i> - Builds a refraction ray.
+	 * 
+	 * @param n - the normal to the geometry.
+	 * @param point - a point on the geometry.
+	 * @param inRay - a ray to the geometry. 
+	 * @return a refraction ray.
+	 */
+	private Ray constructRefractedRay(Vector n, Point3D point, Ray inRay)
+	{
+		return new Ray(point, inRay.get_diraction(), n);
+	}
+
+
+	/**
+	 * Function <i>findCLosestIntersection</i> - calculate the closest point for finding the wanted color.
+	 * 
+	 * @param ray - the ray which intersects the scene.
 	 * @return a <i>GeoPoint</i> object of the geometry's closest point to the camera.
 	 */
-	private GeoPoint getClosestPoint(List<GeoPoint> intersectionPointsList)
+	private GeoPoint findCLosestIntersection(Ray ray)
 	{
-		Point3D p0 = this._scene.get_camera().getPosition();
-		GeoPoint cp = null;
+		if (ray == null) 
+			return null;
 
-		double minDistance = Double.MAX_VALUE;
-		double currentDistance = 0;
+		Point3D ray_p0 = ray.get_POO();
+		GeoPoint closestPoint = null;
+		double closestDistance = Double.MAX_VALUE;
 
-		for(GeoPoint p :intersectionPointsList)
+		List<GeoPoint> intersections = _scene.get_geometries().findIntersections(ray);
+
+		if(intersections == null)
+			return null;
+
+		for(GeoPoint p : intersections)
 		{
-			currentDistance = p0.distance(p.point);
+			double currentDistance = ray_p0.distance(p.point);
 
-			if(currentDistance < minDistance)
+			if(currentDistance < closestDistance)
 			{
-				minDistance = currentDistance;
-				cp = p;
+				closestDistance = currentDistance;
+				closestPoint = p;
 			}
 		}
 
-		return cp;
+		return closestPoint;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

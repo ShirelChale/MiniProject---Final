@@ -1,5 +1,7 @@
 package primitives;
 
+import static primitives.Util.isZero;
+
 /**
  * A Ray Object.
  * 
@@ -13,14 +15,16 @@ package primitives;
  */
 
 public class Ray {
-	
+
 	/*** Attributes: ***/
+	private static final double DELTA = 0.1;
+
 	private Point3D _POO;
 	private Vector _direction;
 
-	
+
 	/*** Constructors: ***/
-	
+
 	/**
 	 * A <i>Ray</i> constructor - for a 3D point and a vector. 
 	 * Checks if the direction vector is normalized.
@@ -29,11 +33,21 @@ public class Ray {
 	 * @param d - the direction of the ray.
 	 */
 	public Ray(Point3D p, Vector d) {
-		this._POO = p;
-		this._direction=d;
+		this._POO =new Point3D( p);
+		this._direction = new Vector(d);
 		this._direction.normalize();
 	}
-	
+
+
+	public Ray(Point3D p, Vector d, Vector n) {	
+		_direction = new Vector(d).normalized();
+
+		double nv = n.dotProduct(d);
+		Vector normalDelta = n.scale((nv > 0 ? DELTA : -DELTA));
+		_POO = p.add(normalDelta);
+	}
+
+
 	/**
 	 * A <i>Ray</i> copy constructor - for a ray. 
 	 * 
@@ -42,11 +56,11 @@ public class Ray {
 	public Ray(Ray r) {
 		this._POO = r._POO;
 		this._direction = r._direction;
-		this._direction.normalize();
-		
+		//this._direction.normalize();
+
 	}
-	
-	
+
+
 	/*** Getters: ***/
 	public Point3D get_POO() {
 		return _POO;
@@ -55,10 +69,10 @@ public class Ray {
 	public Vector get_diraction() {
 		return _direction;
 	}
-	
-	
+
+
 	/*** Methods: ***/
-	
+
 	/**
 	 * Checks if the <i>obj</i> object is equal to different possibilities.
 	 * 
@@ -88,22 +102,33 @@ public class Ray {
 	}
 
 	/**
-	 * Prints the object in a concise and convenient way.
+	 * Function <i>toString</i> - Prints the object in a concise and convenient way.
 	 * 
 	 * @return a string of the Ray's starting point and the Ray's direction.
 	 */
 	@Override
-    public String toString() {
-    	return "Ray{" + "_POO" + this._POO + "_direction" + this._direction + "}";
-    }
-    
-    public Point3D getPoint(double t) 
-    {
-    	return this._POO.add(this._direction.scale(t));
-    }
+	public String toString() {
+		return "Ray{" + "_POO" + this._POO + "_direction" + this._direction + "}";
+	}
+
+
+	/**
+	 * Function <i>getPoint</i> - Creates a new 3D point using the received length.
+	 * 
+	 * @param t - the length of the new point we'll create.
+	 * @return a new 3D Point.
+	 */
+	public Point3D getPoint(double t) 
+	{
+		if (isZero(t))
+			return _POO;
+		
+		Vector v = _direction.scale(t);
+		return new Point3D(_POO.add(v));   
+	}
 }
-    
-    
-    
-    
-    
+
+
+
+
+

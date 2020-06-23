@@ -51,8 +51,8 @@ public class Polygon extends Geometry {
 	 *                                  <li>The polygon is concave (not convex></li>
 	 *                                  </ul>
 	 */
-	public Polygon(Point3D... vertices) {
-		super();
+	public Polygon(Color c, Material m, Point3D... vertices) {
+		super(c, m);
 		if (vertices.length < 3)
 			throw new IllegalArgumentException("A polygon can't have less than 3 vertices");
 		_vertices = List.of(vertices);
@@ -60,6 +60,7 @@ public class Polygon extends Geometry {
 		// polygon with this plane.
 		// The plane holds the invariant normal (orthogonal unit) vector to the polygon
 		_plane = new Plane(vertices[0], vertices[1], vertices[2]);
+		
 		if (vertices.length == 3) return; // no need for more tests for a Triangle
 
 		Vector n = _plane.getNormal();
@@ -79,6 +80,7 @@ public class Polygon extends Geometry {
 		// the
 		// polygon is convex ("kamur" in Hebrew).
 		boolean positive = edge1.crossProduct(edge2).dotProduct(n) > 0;
+		
 		for (int i = 1; i < vertices.length; ++i) {
 			// Test that the point is in the same plane as calculated originally
 			if (!isZero(vertices[i].subtract(vertices[0]).dotProduct(n)))
@@ -91,6 +93,7 @@ public class Polygon extends Geometry {
 		}
 	}
 
+	
 	/**
 	 * A <i>Plane</i> constructor - for a color and a list of vertices. 
 	 * The list must be ordered by edge path.
@@ -98,10 +101,9 @@ public class Polygon extends Geometry {
 	 * @param emmission - the polygon's color.
 	 * @param vertices - list of vertices according to their order by edge path.
 	 */
-	public Polygon(Color emmission, Point3D... vertices) {
-		this(vertices);
-		this._emmission = emmission;
-	}
+    public Polygon(Color c ,Point3D... vertices) {
+        this(c, new Material(0, 0, 0), vertices);
+    }
 
 
 	/**
@@ -112,12 +114,12 @@ public class Polygon extends Geometry {
 	 * @param emmission - the polygon's color.
 	 * @param vertices - list of vertices according to their order by edge path.
 	 */
-	public Polygon(Material m, Color emmission, Point3D... vertices) {
-		this(emmission, vertices);
-		this._material = m;
-	}
+    public Polygon(Point3D... vertices) {
+        this(Color.BLACK, new Material(0, 0, 0), vertices);
+    }
 
 
+    
 
 	/*** A getter: ***/
 

@@ -36,8 +36,9 @@ public class Sphere extends RadialGeometry{
 	}
 
 	/**
-	 * A <i>Sphere</i> constructor - for a double number and a 3D point. 
+	 * A <i>Sphere</i> constructor - for a material, a double number and a 3D point. 
 	 *
+	 * @param m - the sphere's material.
 	 * @param r - the sphere radius.
 	 * @param p - the sphere center point.
 	 */
@@ -48,8 +49,10 @@ public class Sphere extends RadialGeometry{
 
 	
 	/**
-	 * A <i>Sphere</i> constructor - for a double number and a 3D point. 
+	 * A <i>Sphere</i> constructor - for a color, a material, a double number and a 3D point. 
 	 *
+	 * @param color - the sphere's color.
+	 * @param m - the sphere's material.
 	 * @param r - the sphere radius.
 	 * @param p - the sphere center point.
 	 */
@@ -139,8 +142,10 @@ public class Sphere extends RadialGeometry{
 				p2 = new GeoPoint(this, ray.getPoint(t2));
 				resultList.add(p2);
 			}
+			
 			return resultList;
 		}
+		
 		return null;
 	}
 }

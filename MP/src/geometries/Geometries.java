@@ -5,6 +5,8 @@ import primitives.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import geometries.Intersectable.GeoPoint;
+
 /**
  *  A Geometries object. 
  *  Implements <i>Intersectable</i> class
@@ -27,7 +29,7 @@ public class Geometries implements Intersectable{
 	 * A <i>Geometries</i> default constructor - for multiple intersection. 
 	 */
 	public Geometries() {
-		this.listOfGeometries = new ArrayList<Intersectable>();
+		this.listOfGeometries = new ArrayList<>();
 	}
 
 	/**
@@ -75,34 +77,7 @@ public class Geometries implements Intersectable{
 			return result;
 		else
 			return null;
-	}
-
-	
-	/**
-	 * Checks if the <i>obj</i> object is equal to different possibilities.
-	 * 
-	 * @param obj is the object which we want to compare.
-	 * @return a boolean answer to the object's equality.
-	 */
-	/*
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Geometries other = (Geometries) obj;
-		if (listOfGeometries == null) {
-			if (other.listOfGeometries != null)
-				return false;
-		} else if (!listOfGeometries.equals(other.listOfGeometries))
-			return false;
-		return true;
-	}
-	
-*/	
+	}	
 	
 }
 

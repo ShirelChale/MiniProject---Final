@@ -22,7 +22,7 @@ public final class Coordinate {
      * @param coord coordinate value
      */
     public Coordinate(double coord) {
-        // if it too close to zero make it zero
+        // If it too close to zero make it zero
         _coord = alignZero(coord);
     }
 
@@ -44,7 +44,11 @@ public final class Coordinate {
         return _coord;
     }
 
-    /*************** Admin *****************/
+    
+    
+    
+	/*** Methods: ***/
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
