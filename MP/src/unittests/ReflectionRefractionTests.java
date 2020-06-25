@@ -136,7 +136,8 @@ public class ReflectionRefractionTests {
 
 
         scene.addLights(
-                new SpotLight(new Color(700, 400, 400),new Point3D(60, -50, 0),new Vector(0, 0, 1), 1, 4E-5, 2E-7),
+                new SpotLight(new Color(500, 250, 250),new Point3D(10, 10, 130), new Vector(-2, 2, 1),
+                        1, 0.0001, 0.000005),
                 new DirectionalLight(new Color(500, 300, 0), new Vector(1, -1, 1)));
 
         ImageWriter imageWriter = new ImageWriter("Our New Test", 200, 200, 600, 600);

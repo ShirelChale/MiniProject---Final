@@ -3,6 +3,8 @@ import primitives.*;
 import static java.lang.System.out;
 import static primitives.Util.*;
 
+import java.util.Random;
+
 /**
  * Test program for the 1st stage.
  *
@@ -12,13 +14,13 @@ import static primitives.Util.*;
 
 public final class Main {
 
-    /**
-     * Main program to tests initial functionality of the 1st stage
-     * 
-     * @param args irrelevant here
-     */
-    public static void main(String[] args) {
-
+	/**
+	 * Main program to tests initial functionality of the 1st stage
+	 * 
+	 * @param args irrelevant here
+	 */
+	public static void main(String[] args) {
+		/*
     	try { // test zero vector
             new Vector(0, 0, 0);
             out.println("ERROR: zero vector does not throw an exception");
@@ -71,18 +73,31 @@ public final class Main {
              out.println("ERROR: Point - Point does not work correctly");
 
         out.println("If there were no any other outputs - all tests succeeded!");
- 
-    }
-    
-
-	
+		 */
+		
+		for(int i = 0; i<20; i++) {
+			double r = rand(9);
 			
-    
-    
-    
-    
-    
-    
-    
-    
+			r = r * getRandomSign();
+			out.println("result: "+r);
+		}
+
+	}
+	
+	private static double rand(double radius) {
+		double rand = Math.random();
+		double result = rand / 100;
+		
+		return result;
+	}
+	
+	private static int getRandomSign()
+	{
+		Random rand = new Random();
+	    if(rand.nextBoolean())
+	        return -1;
+	    else
+	        return 1;
+	}
+
 }

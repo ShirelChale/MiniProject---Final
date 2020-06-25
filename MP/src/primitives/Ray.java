@@ -27,7 +27,6 @@ public class Ray {
 
 	/**
 	 * A <i>Ray</i> constructor - for a 3D point and a vector. 
-	 * Checks if the direction vector is normalized.
 	 * 
 	 * @param p - a 3D point for the ray's starting point.
 	 * @param d - the direction of the ray.
@@ -37,8 +36,15 @@ public class Ray {
 		this._direction = new Vector(d);
 		this._direction.normalize();
 	}
+	
 
-
+	/**
+	 * A <i>Ray</i> constructor - for a 3D point and 2 vectors. 
+	 * 
+	 * @param p - a 3D point for the ray's starting point.
+	 * @param d - the direction of the ray.
+	 * @param n - a normal.
+	 */
 	public Ray(Point3D p, Vector d, Vector n) {	
 		_direction = new Vector(d).normalized();
 

@@ -10,7 +10,9 @@ import static primitives.Util.*;
 import static primitives.Util.alignZero;
 
 import java.lang.Math;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *  A rendering class for creating a scene.
@@ -28,7 +30,7 @@ public class Render {
 	private Scene _scene;
 	private ImageWriter _imageWriter;
 
-	
+
 
 	/*** Constructors: ***/
 
@@ -77,7 +79,7 @@ public class Render {
 					_imageWriter.writePixel(j, i, calcColor(closestPoint, r).getColor());
 				}
 			}
-		
+
 	}
 
 	/**
@@ -106,7 +108,7 @@ public class Render {
 		_imageWriter.writeToImage();
 	}
 
-	
+
 	/**
 	 * Function <i>getClosestPoint</i> - calculate the closest point for finding the wanted color.
 	 * 
@@ -145,8 +147,8 @@ public class Render {
 	 */
 	private Color calcColor(GeoPoint geopoint, Ray inRay) 
 	{
-        Color resultColor = calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0);
-        resultColor = resultColor.add(_scene.get_ambientLight().get_intensity());
+		Color resultColor = calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0);
+		resultColor = resultColor.add(_scene.get_ambientLight().get_intensity());
 
 		return resultColor;
 	}
@@ -180,7 +182,7 @@ public class Render {
 		double kt = geoPoint.geometry.get_material().get_KT();
 		double kkr = k * kr;
 		double kkt = k * kt;
-		
+
 		List<LightSource> lightSources = this._scene.get_Lights();
 
 		if(lightSources != null)
@@ -199,7 +201,7 @@ public class Render {
 					}
 				}
 			}
-		
+
 		if(kkr > MIN_CALC_COLOR_K) {
 			Ray reflectedRay = constructReflectedRay(n, pointGeo, inRay);
 			GeoPoint reflectedPoint = this.findCLosestIntersection(reflectedRay);
@@ -221,7 +223,7 @@ public class Render {
 
 
 	/**
-	 * Function <i>transparency</i> - calculates the transparency number of the color.
+	 * Function <i>transparency</i> - Calculates the transparency number of the color.
 	 * 
 	 * @param lightSource - the light source.
 	 * @param l - 
@@ -230,19 +232,94 @@ public class Render {
 	 * @return the transparency number of the color.
 	 */
 	private double transparency(LightSource lightSource, Vector l, Vector n, GeoPoint geoPoint) {
-		Vector lightDirection = l.scale(-1);
+
+		double ColorList[] = new double[81];
+		double numSamples = 81;
+		double average = 0;
+		Point3D source = geoPoint.getPoint();
+
+		Vector lightDirection = l.scale(-1); // Flips the direction
 		Ray lightRay = new Ray(geoPoint.point, lightDirection, n);
+
+		ColorList[0] = calcShade(lightSource, source, lightRay);
+		average += ColorList[0];
+		
+		double zVal = lightDirection.get_head().getZ().get();
+
+		for (int d = 1; d < numSamples; d++)
+		{
+			double randX = rand();
+			double randY = rand();
+			
+			double xVal = lightDirection.get_head().getX().get() + randX;
+			double yVal = lightDirection.get_head().getY().get() + randY;
+			
+			Vector randDirection = new Vector(xVal, yVal, zVal);
+
+			Ray randLightRay = new Ray(source, randDirection, n);
+
+			ColorList[d] = calcShade(lightSource, source, randLightRay);
+
+			average += ColorList[d];
+		}
+
+		average = average/numSamples;
+
+		return average;
+	}
+
+
+	/**
+	 * Function <i>rand</i> - Calculates a random number.
+	 * 
+	 * @param radius - the boundary of the circle.
+	 * @return a random number - positive or negative.
+	 */
+	private double rand() {
+		double rand = Math.random();
+		double result = rand / 80;
+		
+		result *= getRandomSign();
+		
+		return result;
+	}
+	
+	
+	/**
+	 * Function <i>getRandomSign</i> - Calculates a random sign.
+	 * 
+	 * @return positive or negative 1.
+	 */
+	private int getRandomSign()
+	{
+		Random rand = new Random();
+	    if(rand.nextBoolean())
+	        return -1;
+	    else
+	        return 1;
+	}
+
+
+	/**
+	 * Function <i>unshaded</i> - Calculates a point's shaded value (1 = no shading, 0 = shading).
+	 * 
+	 * @param lightSource - the light source.
+	 * @param source - the point which will be checked.
+	 * @param lightRay - ray from a point on light source to the point.
+	 * @return point's shaded value (1 or 0).
+	 */
+	private double calcShade(LightSource lightSource, Point3D source, Ray lightRay) {
 
 		List<GeoPoint> intersection = _scene.get_geometries().findIntersections(lightRay);
 
 		if(intersection == null)
 			return 1d;
 
-		double lightDistance = lightSource.getDistance(geoPoint.point);
+		double lightDistance = lightSource.getDistance(source);
 		double ktr = 1d;
 
 		for (GeoPoint gp: intersection)
-			if(alignZero(gp.point.distance(geoPoint.point) - lightDistance) <= 0)
+			if(alignZero(gp.point.distance(source) - lightDistance) <= 0)
 			{
 				ktr *= gp.geometry.get_material().get_KT();
 
@@ -252,18 +329,18 @@ public class Render {
 		return ktr;
 	}
 
-
+/*
 	/**
 	 * Function <i>sign</i> - Checks if a value is positive.
 	 * 
 	 * @param val - a value.
 	 * @return true if it's positive.
-	 */
+	 *//*
 	private boolean sign(double val)
 	{
 		return (val > 0d);
 	}
-
+*/
 
 	/**
 	 * Function <i>calcSpecular</i> - calculate the secular color.
