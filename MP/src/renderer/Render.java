@@ -59,6 +59,7 @@ public class Render {
 		java.awt.Color Background = _scene.get_background().getColor();
 		Geometries geometries = _scene.get_geometries();
 		double distance = _scene.get_distance();
+		double numSamples = _scene.get_sumples();
 
 		int Ny = _imageWriter.getNy(); // Amount of pixels by Height.
 		int Nx = _imageWriter.getNx(); // Amount of pixels by Width.
@@ -76,7 +77,7 @@ public class Render {
 				else
 				{
 					GeoPoint closestPoint = getClosestPoint(intersectionPointsList);
-					_imageWriter.writePixel(j, i, calcColor(closestPoint, r).getColor());
+					_imageWriter.writePixel(j, i, calcColor(closestPoint, r, numSamples).getColor());
 				}
 			}
 
@@ -145,9 +146,9 @@ public class Render {
 	 * @param inRay - TODO
 	 * @return a color for the object point's pixel to write.
 	 */
-	private Color calcColor(GeoPoint geopoint, Ray inRay) 
+	private Color calcColor(GeoPoint geopoint, Ray inRay, double numSamples) 
 	{
-		Color resultColor = calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0);
+		Color resultColor = calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0, numSamples);
 		resultColor = resultColor.add(_scene.get_ambientLight().get_intensity());
 
 		return resultColor;
@@ -163,7 +164,7 @@ public class Render {
 	 * @param k - TODO
 	 * @return a color for the object point's pixel to write.
 	 */
-	private Color calcColor(GeoPoint geoPoint, Ray inRay, int level, double k) 
+	private Color calcColor(GeoPoint geoPoint, Ray inRay, int level, double k double numSamples) 
 	{
 		if(level == 0 || level == 1 || k < MIN_CALC_COLOR_K)
 			return Color.BLACK;
@@ -192,7 +193,7 @@ public class Render {
 				double Nv = alignZero(n.dotProduct(v));
 
 				if(Nl * Nv > 0) {
-					double ktr = transparency(lightSource, l, n, geoPoint);
+					double ktr = transparency(lightSource, l, n, geoPoint, numSamples);
 					if(ktr * k > MIN_CALC_COLOR_K) {
 						Color Ip = lightSource.getIntensity(pointGeo).scale(ktr);
 						result = result.add(
@@ -207,7 +208,7 @@ public class Render {
 			GeoPoint reflectedPoint = this.findCLosestIntersection(reflectedRay);
 
 			if(reflectedPoint != null)
-				result = result.add(this.calcColor(reflectedPoint, reflectedRay, level-1, kkr).scale(kr));
+				result = result.add(this.calcColor(reflectedPoint, reflectedRay, level-1, kkr, numSamples).scale(kr));
 		}
 
 		if(kkt > MIN_CALC_COLOR_K) {
@@ -215,7 +216,7 @@ public class Render {
 			GeoPoint refractedPoint = this.findCLosestIntersection(refractedRay);
 
 			if(refractedPoint != null)
-				result = result.add(this.calcColor(refractedPoint, refractedRay, level-1, kkt).scale(kt));
+				result = result.add(this.calcColor(refractedPoint, refractedRay, level-1, kkt, numSamples).scale(kt));
 		}
 
 		return result;
@@ -231,10 +232,9 @@ public class Render {
 	 * @param geoPoint - TODO
 	 * @return the transparency number of the color.
 	 */
-	private double transparency(LightSource lightSource, Vector l, Vector n, GeoPoint geoPoint) {
+	private double transparency(LightSource lightSource, Vector l, Vector n, GeoPoint geoPoint, double numSamples) {
 
-		double ColorList[] = new double[81];
-		double numSamples = 81;
+		double ColorList[] = new double[(int) numSamples];
 		double average = 0;
 		Point3D source = geoPoint.getPoint();
 
