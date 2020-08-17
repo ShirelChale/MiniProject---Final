@@ -17,6 +17,7 @@ public class SoftShadowsTests {
 		scene.setDistance(1000);
 		scene.setBackground(new Color(218,28,76));
 		scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.BLACK), 0.15));
+		scene.set_sumples(200);
 
 		scene.addGeometries( 
 				new Triangle(new Color(java.awt.Color.GREEN),new Material(0, 0, 0, 0.3, 0.5),

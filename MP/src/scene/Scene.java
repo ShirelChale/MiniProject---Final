@@ -26,7 +26,9 @@ public class Scene {
 	private Geometries _geometries;
 	private Camera _camera;
 	private double _distance;
-	List<LightSource> _lights = new LinkedList<LightSource>();
+	List<LightSource> _lights = new LinkedList<LightSource>();	
+	private double _sumples;
+	
 
 	/*** Constructors: ***/
 
@@ -93,6 +95,13 @@ public class Scene {
 		return _lights;
 	}
 
+	public void set_sumples(double s) {
+		this._sumples = s;
+	}
+	
+	public double get_sumples() {
+		return _sumples;
+	}
 
 
 	/*** Methods: ***/

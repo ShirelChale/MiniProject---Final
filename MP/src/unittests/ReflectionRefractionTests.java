@@ -31,6 +31,7 @@ public class ReflectionRefractionTests {
 		scene.setDistance(1000);
 		scene.setBackground(Color.BLACK);
 		scene.setAmbientLight(new AmbientLight(Color.BLACK, 0));
+		scene.set_sumples(200);
 
 		scene.addGeometries(
 				new Sphere(new Color(java.awt.Color.BLUE), new Material(0.4, 0.3, 100, 0.3, 0), 50,
@@ -57,6 +58,7 @@ public class ReflectionRefractionTests {
 		scene.setDistance(10000);
 		scene.setBackground(Color.BLACK);
 		scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255), 0.1));
+		scene.set_sumples(200);
 
 		scene.addGeometries(
 				new Sphere(new Color(0, 0, 100), 
@@ -89,6 +91,7 @@ public class ReflectionRefractionTests {
 		scene.setDistance(1000);
 		scene.setBackground(Color.BLACK);
 		scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.15));
+		scene.set_sumples(200);
 
 		scene.addGeometries( //
 				new Triangle(Color.BLACK, new Material(0.5, 0.5, 60), //
@@ -120,6 +123,7 @@ public class ReflectionRefractionTests {
         scene.setDistance(1000);
         scene.setBackground(new Color(8,8,246));
         scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), 0.15));
+        scene.set_sumples(200);
 
         scene.addGeometries( 
                 new Triangle(new Color(java.awt.Color.red),new Material(0, 0, 0, 0.3, 0.5),

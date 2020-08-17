@@ -7,8 +7,6 @@ import geometries.Intersectable.GeoPoint;
 import scene.*;
 import static primitives.Util.*;
 
-import static primitives.Util.alignZero;
-
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +25,109 @@ public class Render {
 	private static final int MAX_CALC_COLOR_LEVEL = 10;
 	private static final double MIN_CALC_COLOR_K = 0.001;
 
+	private int _threads = 1;
+	private final int SPARE_THREADS = 2; // Spare threads if trying to use all the cores
+	private boolean _print = false; // printing progress percentage
+
 	private Scene _scene;
 	private ImageWriter _imageWriter;
+
+	//public static double average = 0;
+	//public static double numSamples = 1;
+
+
+	/**
+	 * Pixel is an internal helper class whose objects are associated with a Render object that
+	 * they are generated in scope of. It is used for multithreading in the Renderer and for follow up
+	 * its progress.<br/>
+	 * There is a main follow up object and several secondary objects - one in each thread.
+	 * @author Dan
+	 *
+	 */
+	private class Pixel {
+		private long _maxRows = 0;
+		private long _maxCols = 0;
+		private long _pixels = 0;
+		public volatile int row = 0;
+		public volatile int col = -1;
+		private long _counter = 0;
+		private int _percents = 0;
+		private long _nextCounter = 0;
+
+		/**
+		 * The constructor for initializing the main follow up Pixel object
+		 * @param maxRows the amount of pixel rows
+		 * @param maxCols the amount of pixel columns
+		 */
+		public Pixel(int maxRows, int maxCols) 
+		{
+			_maxRows = maxRows;
+			_maxCols = maxCols;
+			_pixels = maxRows * maxCols;
+			_nextCounter = _pixels / 100;
+
+			if (Render.this._print) 
+
+				System.out.printf("\r %02d%%", _percents);
+		}
+
+
+		/**
+		 *  Default constructor for secondary Pixel objects
+		 */
+		public Pixel() {}
+
+		/**
+		 * Internal function for thread-safe manipulating of main follow up Pixel object - this function is
+		 * critical section for all the threads, and main Pixel object data is the shared data of this critical
+		 * section.<br/>
+		 * The function provides next pixel number each call.
+		 * @param target target secondary Pixel object to copy the row/column of the next pixel 
+		 * @return the progress percentage for follow up: if it is 0 - nothing to print, if it is -1 - the task is
+		 * finished, any other value - the progress percentage (only when it changes)
+		 */
+		private synchronized int nextP(Pixel target) {
+			++col;
+			++_counter;
+			if (col < _maxCols) {
+				target.row = this.row;
+				target.col = this.col;
+				if (_counter == _nextCounter) {
+					++_percents;
+					_nextCounter = _pixels * (_percents + 1) / 100;
+					return _percents;
+				}
+				return 0;
+			}
+			++row;
+			if (row < _maxRows) {
+				col = 0;
+				if (_counter == _nextCounter) {
+					++_percents;
+					_nextCounter = _pixels * (_percents + 1) / 100;
+					return _percents;
+				}
+				return 0;
+			}
+			return -1;
+		}
+
+		/**
+		 * Public function for getting next pixel number into secondary Pixel object.
+		 * The function prints also progress percentage in the console window.
+		 * @param target target secondary Pixel object to copy the row/column of the next pixel 
+		 * @return true if the work still in progress, -1 if it's done
+		 */
+		public boolean nextPixel(Pixel target) {
+			int percents = nextP(target);
+			if (percents > 0)
+				if (Render.this._print) System.out.printf("\r %02d%%", percents);
+			if (percents >= 0)
+				return true;
+			if (Render.this._print) System.out.printf("\r %02d%%", 100);
+			return false;
+		}
+	}
 
 
 
@@ -50,6 +149,30 @@ public class Render {
 
 	/*** Methods: ***/
 
+
+	/**
+	 * Set multithreading <br>
+	 * - if the parameter is 0 - number of coress less 2 is taken
+	 * 
+	 * @param threads number of threads
+	 * @return the Render object itself
+	 */
+	public Render setMultithreading(int threads) {
+		if (threads < 0)
+			throw new IllegalArgumentException("Multithreading patameter must be 0 or higher");
+		if (threads != 0)
+			_threads = threads;
+		else {
+			int cores = Runtime.getRuntime().availableProcessors() - SPARE_THREADS;
+			if (cores <= 2)
+				_threads = 1;
+			else
+				_threads = cores;
+		}
+		return this;
+	}
+
+
 	/**
 	 * Function <i>renderImage</i> - creates an image of a scene.
 	 */
@@ -59,6 +182,8 @@ public class Render {
 		java.awt.Color Background = _scene.get_background().getColor();
 		Geometries geometries = _scene.get_geometries();
 		double distance = _scene.get_distance();
+		//double numSamples = 1;
+		double numSamples = _scene.get_sumples();
 
 		int Ny = _imageWriter.getNy(); // Amount of pixels by Height.
 		int Nx = _imageWriter.getNx(); // Amount of pixels by Width.
@@ -76,11 +201,24 @@ public class Render {
 				else
 				{
 					GeoPoint closestPoint = getClosestPoint(intersectionPointsList);
-					_imageWriter.writePixel(j, i, calcColor(closestPoint, r).getColor());
+					//_imageWriter.writePixel(j, i, calcColor(closestPoint, r).getColor());
+					_imageWriter.writePixel(j, i, calcColor(closestPoint, r, numSamples).getColor());
+
 				}
 			}
-
 	}
+
+
+	/**
+	 * Set debug printing on
+	 * 
+	 * @return the Render object itself
+	 */
+	public Render setDebugPrint() {
+		_print = true;
+		return this;
+	}
+
 
 	/**
 	 * Function <i>printGrid</i> - creates a grid over an image in a received color.
@@ -99,6 +237,7 @@ public class Render {
 					_imageWriter.writePixel(j, i, color);
 			}
 	}
+
 
 	/**
 	 * Function <i>writeToImage</i> - writes to an image.
@@ -145,9 +284,11 @@ public class Render {
 	 * @param inRay - TODO
 	 * @return a color for the object point's pixel to write.
 	 */
-	private Color calcColor(GeoPoint geopoint, Ray inRay) 
+	private Color calcColor(GeoPoint geopoint, Ray inRay, double numSamples)
+	//private Color calcColor(GeoPoint geopoint, Ray inRay) 
 	{
-		Color resultColor = calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0);
+		//Color resultColor = calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0);
+		Color resultColor = calcColor(geopoint, inRay, MAX_CALC_COLOR_LEVEL, 1.0, numSamples);
 		resultColor = resultColor.add(_scene.get_ambientLight().get_intensity());
 
 		return resultColor;
@@ -163,7 +304,9 @@ public class Render {
 	 * @param k - TODO
 	 * @return a color for the object point's pixel to write.
 	 */
-	private Color calcColor(GeoPoint geoPoint, Ray inRay, int level, double k) 
+	//private Color calcColor(GeoPoint geoPoint, Ray inRay, int level, double k) 
+	private Color calcColor(GeoPoint geoPoint, Ray inRay, int level, double k, double numSamples) 
+
 	{
 		if(level == 0 || level == 1 || k < MIN_CALC_COLOR_K)
 			return Color.BLACK;
@@ -192,7 +335,10 @@ public class Render {
 				double Nv = alignZero(n.dotProduct(v));
 
 				if(Nl * Nv > 0) {
-					double ktr = transparency(lightSource, l, n, geoPoint);
+					//double ktr = transparency(lightSource, l, n, geoPoint);
+					double ktr = transparency(lightSource, l, n, geoPoint, numSamples);
+					//numSamples = 1;
+					//average = 0;
 					if(ktr * k > MIN_CALC_COLOR_K) {
 						Color Ip = lightSource.getIntensity(pointGeo).scale(ktr);
 						result = result.add(
@@ -207,7 +353,9 @@ public class Render {
 			GeoPoint reflectedPoint = this.findCLosestIntersection(reflectedRay);
 
 			if(reflectedPoint != null)
-				result = result.add(this.calcColor(reflectedPoint, reflectedRay, level-1, kkr).scale(kr));
+				//result = result.add(this.calcColor(reflectedPoint, reflectedRay, level-1, kkr).scale(kr));
+				result = result.add(this.calcColor(reflectedPoint, reflectedRay, level-1, kkr, numSamples).scale(kr));
+
 		}
 
 		if(kkt > MIN_CALC_COLOR_K) {
@@ -215,7 +363,9 @@ public class Render {
 			GeoPoint refractedPoint = this.findCLosestIntersection(refractedRay);
 
 			if(refractedPoint != null)
-				result = result.add(this.calcColor(refractedPoint, refractedRay, level-1, kkt).scale(kt));
+				//result = result.add(this.calcColor(refractedPoint, refractedRay, level-1, kkt).scale(kt));
+				result = result.add(this.calcColor(refractedPoint, refractedRay, level-1, kkt, numSamples).scale(kt));
+
 		}
 
 		return result;
@@ -230,11 +380,131 @@ public class Render {
 	 * @param n - the normal vector to the point on the geometry.
 	 * @param geoPoint - TODO
 	 * @return the transparency number of the color.
-	 */
+	 *//*
+	 * Acceleration with threads:
 	private double transparency(LightSource lightSource, Vector l, Vector n, GeoPoint geoPoint) {
 
-		double ColorList[] = new double[81];
+		List<Double> ColorList = new ArrayList<Double>();
 		double numSamples = 81;
+		double average = 0;
+		Point3D source = geoPoint.getPoint();
+		//int d = 1;
+
+		final int nX = 9; // Amount of pixels by width for our new light area.
+		final int nY = 9; // Amount of pixels by height for our new light area.
+		final double height = 0.9; // Height of light area.
+		final double width = 0.9;  // Width of light area.
+		final double dist = 50; // The distance between a point to the light area.
+
+		Vector lightDirection = l.scale(-1); // Flips the direction
+		Ray lightRay = new Ray(geoPoint.point, lightDirection, n);
+
+		ColorList.add(calcShade(lightSource, source, lightRay));
+		//average += ColorList[0];
+
+		Vector head = lightDirection.scale(dist);
+
+		double zVal = head.get_head().getZ().get();
+
+
+		final Pixel thePixel = new Pixel(nY, nX);
+
+		Thread[] threads = new Thread[_threads];
+		for (int i = _threads - 1; i >= 0; --i) {
+			threads[i] = new Thread(() -> {
+				Pixel pixel = new Pixel();
+				while (thePixel.nextPixel(pixel)) {
+					double xVal = head.get_head().getX().get() + findPixelShift(nX, pixel.col, dist, width);
+					double yVal = head.get_head().getY().get() + findPixelShift(nY, pixel.row, dist, height);
+
+					Point3D pixelPoint = new Point3D(xVal, -yVal, zVal);
+					Vector pixelVector = new Vector(pixelPoint.subtract(source));
+					Ray pixelRay = new Ray(source, pixelVector, n);
+
+					ColorList.add(calcShade(lightSource, source, pixelRay));
+				}
+			});
+			if(!ColorList.isEmpty())
+				for(Double num : ColorList)
+					average += num;
+			//d++;
+		}
+
+		// Start threads
+		for (Thread thread : threads) thread.start();
+
+		// Wait for all threads to finish
+		for (Thread thread : threads) try { thread.join(); } catch (Exception e) {}
+		if (_print) System.out.printf("\r100%%\n");
+
+		average = average/numSamples;
+
+		return average;
+	}*/
+
+	
+	private double transparency(LightSource lightSource, Vector l, Vector n, GeoPoint geoPoint, double numSamples) {
+
+		//double ColorList[] = new double[1280];
+		double average = 0;
+		Point3D source = geoPoint.getPoint();
+		//int d = 0;
+		double depth = 0;
+		double half = 0.5;
+
+		Vector lightDirection = l.scale(-1); // Flips the direction
+		Ray lightRay = new Ray(geoPoint.point, lightDirection, n);
+		double zVal = lightDirection.get_head().getZ().get();
+
+		double temp = calcShade(lightSource, source, lightRay);
+		average += temp;
+		if(temp == 0) {
+			depth++;
+			numSamples += 4;
+			trans(lightSource, lightDirection, n, source, half, zVal, depth, temp, numSamples, average);
+		}		
+
+		average = average/numSamples;
+
+		return average;
+	}
+
+	private void trans(LightSource lightSource, Vector middleRay, Vector n, Point3D middle, 
+			double half, double zVal, double depth, double temp, double numSamples, double average)
+	{
+		if (depth == 5)
+			return;
+
+		createNewRay(lightSource, middleRay, n, middle, half, half, zVal, depth, half, temp, numSamples, average);
+		createNewRay(lightSource, middleRay, n, middle, half, -half, zVal, depth, half, temp, numSamples, average);
+		createNewRay(lightSource, middleRay, n, middle, -half, half, zVal, depth, half, temp, numSamples, average);
+		createNewRay(lightSource, middleRay, n, middle, -half, -half, zVal, depth, half, temp, numSamples, average);	
+	}
+
+	private void createNewRay(LightSource lightSource, Vector middleRay, Vector n, Point3D middle, 
+			double numX, double numY, double zVal, double depth, double half, double temp, double numSamples, double average)
+	{
+		double xVal = middleRay.get_head().getX().get() + numX;
+		double yVal = middleRay.get_head().getY().get() + numY;
+
+		Vector sumpleDirection = new Vector(xVal, yVal, zVal);
+
+		Ray sumpleLightRay = new Ray(middle, sumpleDirection, n);
+
+		temp = calcShade(lightSource, middle, sumpleLightRay);
+		average += temp;
+		if(temp == 0) {
+			depth++;
+			numSamples += 4;
+			trans(lightSource, middleRay, n, middle, half/2, zVal, depth, temp, numSamples, average);
+		}
+	}
+
+/*
+	// ***Mini Project 1:***
+	private double transparency(LightSource lightSource, Vector l, Vector n, GeoPoint geoPoint, double numSamples) {
+
+		double ColorList[] = new double[(int) numSamples];
 		double average = 0;
 		Point3D source = geoPoint.getPoint();
 
@@ -243,17 +513,17 @@ public class Render {
 
 		ColorList[0] = calcShade(lightSource, source, lightRay);
 		average += ColorList[0];
-		
+
 		double zVal = lightDirection.get_head().getZ().get();
 
 		for (int d = 1; d < numSamples; d++)
 		{
 			double randX = rand();
 			double randY = rand();
-			
+
 			double xVal = lightDirection.get_head().getX().get() + randX;
 			double yVal = lightDirection.get_head().getY().get() + randY;
-			
+
 			Vector randDirection = new Vector(xVal, yVal, zVal);
 
 			Ray randLightRay = new Ray(source, randDirection, n);
@@ -266,6 +536,19 @@ public class Render {
 		average = average/numSamples;
 
 		return average;
+	}*/
+
+
+	private double findPixelShift(int totalPixels, int pixelNum, double distance, double wORh) {
+
+		// View plane resolution:
+		double resolution = wORh / totalPixels;
+
+		// Pixel center calculation:
+		double pixelCenter = (pixelNum - totalPixels / 2d) * resolution + resolution / 2d;
+
+		return pixelCenter;
+
 	}
 
 
@@ -278,13 +561,13 @@ public class Render {
 	private double rand() {
 		double rand = Math.random();
 		double result = rand / 80;
-		
+
 		result *= getRandomSign();
-		
+
 		return result;
 	}
-	
-	
+
+
 	/**
 	 * Function <i>getRandomSign</i> - Calculates a random sign.
 	 * 
@@ -293,10 +576,10 @@ public class Render {
 	private int getRandomSign()
 	{
 		Random rand = new Random();
-	    if(rand.nextBoolean())
-	        return -1;
-	    else
-	        return 1;
+		if(rand.nextBoolean())
+			return -1;
+		else
+			return 1;
 	}
 
 
@@ -329,7 +612,7 @@ public class Render {
 		return ktr;
 	}
 
-/*
+	/*
 	/**
 	 * Function <i>sign</i> - Checks if a value is positive.
 	 * 
@@ -340,7 +623,7 @@ public class Render {
 	{
 		return (val > 0d);
 	}
-*/
+	  */
 
 	/**
 	 * Function <i>calcSpecular</i> - calculate the secular color.
