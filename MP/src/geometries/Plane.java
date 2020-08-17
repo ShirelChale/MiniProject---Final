@@ -21,8 +21,8 @@ import primitives.*;
 public class Plane extends Geometry{
 
 	/*** Attributes: ***/
-	Point3D _p;
-	Vector _normal;
+	protected Point3D _p;
+	protected Vector _normal;
 
 
 	/*** Constructors: ***/
