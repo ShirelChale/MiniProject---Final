@@ -1,1 +1,6 @@
 /renderer/
+/elements/
+/geometries/
+/primitives/
+/scene/
+/unittests/
